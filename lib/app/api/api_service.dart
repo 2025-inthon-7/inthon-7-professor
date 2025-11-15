@@ -25,7 +25,7 @@ class ApiService {
 
   Future<Result<CourseSession>> getTodayCourseSession(String courseId) =>
       _dio.get(
-        '/api/courses/$courseId/today-session/',
+        '/courses/$courseId/today-session/',
         fromJson: (data) => CourseSession.fromJson(data),
       );
 }

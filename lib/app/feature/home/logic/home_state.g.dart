@@ -18,6 +18,11 @@ _$HomeStateImpl _$$HomeStateImplFromJson(Map<String, dynamic> json) =>
           : Course.fromJson(json['selectedCourse'] as Map<String, dynamic>),
       classSearchValue: json['classSearchValue'] as String? ?? '',
       isStartingClass: json['isStartingClass'] as bool? ?? false,
+      currentCourseSession: json['currentCourseSession'] == null
+          ? null
+          : CourseSession.fromJson(
+              json['currentCourseSession'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$$HomeStateImplToJson(_$HomeStateImpl instance) =>
@@ -26,4 +31,5 @@ Map<String, dynamic> _$$HomeStateImplToJson(_$HomeStateImpl instance) =>
       'selectedCourse': instance.selectedCourse,
       'classSearchValue': instance.classSearchValue,
       'isStartingClass': instance.isStartingClass,
+      'currentCourseSession': instance.currentCourseSession,
     };

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
+import 'package:inthon_7_professor/app/model/course_session.dart';
 
 part 'home_state.freezed.dart';
 part 'home_state.g.dart';
@@ -11,6 +12,7 @@ class HomeState with _$HomeState {
     Course? selectedCourse,
     @Default('') String classSearchValue,
     @Default(false) bool isStartingClass,
+    CourseSession? currentCourseSession,
   }) = _HomeState;
 
   factory HomeState.fromJson(Map<String, dynamic> json) =>
