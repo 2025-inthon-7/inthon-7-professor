@@ -9,8 +9,6 @@ final homeProvider = NotifierProvider<HomeProvider, HomeState>(
 );
 
 class HomeProvider extends Notifier<HomeState> {
-  late ScreenCaptureService service;
-
   @override
   build() {
     return HomeState();
@@ -28,7 +26,7 @@ class HomeProvider extends Notifier<HomeState> {
 
   Future<bool> startClass() async {
     state = state.copyWith(isStartingClass: true);
-    service = ScreenCaptureService();
+    final service = ScreenCaptureService.I;
     final success = await service.startScreenCapture();
     await Future.delayed(const Duration(milliseconds: 10));
     state = state.copyWith(isStartingClass: false);
@@ -36,18 +34,21 @@ class HomeProvider extends Notifier<HomeState> {
   }
 
   void reSelectScreen() async {
+    final service = ScreenCaptureService.I;
     service.stopScreenCapture();
     await service.startScreenCapture();
     await Future.delayed(const Duration(milliseconds: 10));
   }
 
   Future<Uint8List?> getCapturedScreen() async {
+    final service = ScreenCaptureService.I;
     return await service.captureFrame();
   }
 
   void sendImportantNotification() {}
 
   void endClass() {
+    final service = ScreenCaptureService.I;
     service.stopScreenCapture();
     state = state.copyWith(className: '', classSearchValue: '');
   }

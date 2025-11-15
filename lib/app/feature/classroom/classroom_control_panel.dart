@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -22,8 +24,8 @@ class ClassroomControlPanel extends ConsumerWidget {
             onPressed: () {
               // ref.read(homeProvider.notifier).sendImportantNotification();
               //TODO
-              // ref.read(pipProvider.notifier).sendEventsToPip();
-              // ref.read(pipProvider.notifier).closePIPMode();
+              final aa = ref.read(homeProvider.notifier).getCapturedScreen();
+              log(aa.toString());
             },
             child: const Text('중요 알림 보내기'),
           ),

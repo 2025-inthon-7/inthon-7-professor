@@ -25,6 +25,7 @@ class Service {
         container: container,
       ),
     );
+    GetIt.I.registerSingleton(ScreenCaptureService());
 
     GetIt.I.registerSingleton(RouterService()..init());
     return container;

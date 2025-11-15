@@ -43,6 +43,7 @@ class HomeInitialPanel extends ConsumerWidget {
               children: [
                 const SizedBox(height: 12),
                 ShadButton(
+                  enabled: state.className.isNotEmpty,
                   width: double.maxFinite,
                   onPressed: () async {
                     if (ref.read(homeProvider).isStartingClass) return;

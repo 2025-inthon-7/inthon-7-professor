@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'dart:js_interop';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:web/web.dart' as web;
 
 class ScreenCaptureService {
+  static ScreenCaptureService get I => GetIt.I<ScreenCaptureService>();
   web.MediaStream? _stream;
   web.HTMLVideoElement? _videoElement;
 
