@@ -28,7 +28,7 @@ void main() async {
         UncontrolledProviderScope(
           container: serviceProviderContainer,
           child: ShadApp.router(
-            title: 'inthon-7-professor',
+            title: '나만의 작은 교수[나작교]',
             routerConfig: router,
             themeMode: ThemeMode.light,
             theme: ShadThemeData(
