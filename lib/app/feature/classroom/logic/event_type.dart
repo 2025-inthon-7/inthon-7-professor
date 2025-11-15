@@ -7,8 +7,11 @@ enum EType { question, difficult, easy, info }
 
 @freezed
 class EventType with _$EventType {
-  factory EventType({required EType type, required String content}) =
-      _EventType;
+  factory EventType({
+    required EType type,
+    required String content,
+    String? imageUrl,
+  }) = _EventType;
 
   factory EventType.fromJson(Map<String, dynamic> json) =>
       _$EventTypeFromJson(json);

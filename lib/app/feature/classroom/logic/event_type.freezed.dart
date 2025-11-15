@@ -23,6 +23,7 @@ EventType _$EventTypeFromJson(Map<String, dynamic> json) {
 mixin _$EventType {
   EType get type => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  String? get imageUrl => throw _privateConstructorUsedError;
 
   /// Serializes this EventType to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +40,7 @@ abstract class $EventTypeCopyWith<$Res> {
   factory $EventTypeCopyWith(EventType value, $Res Function(EventType) then) =
       _$EventTypeCopyWithImpl<$Res, EventType>;
   @useResult
-  $Res call({EType type, String content});
+  $Res call({EType type, String content, String? imageUrl});
 }
 
 /// @nodoc
@@ -56,7 +57,11 @@ class _$EventTypeCopyWithImpl<$Res, $Val extends EventType>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? type = null, Object? content = null}) {
+  $Res call({
+    Object? type = null,
+    Object? content = null,
+    Object? imageUrl = freezed,
+  }) {
     return _then(
       _value.copyWith(
             type: null == type
@@ -67,6 +72,10 @@ class _$EventTypeCopyWithImpl<$Res, $Val extends EventType>
                 ? _value.content
                 : content // ignore: cast_nullable_to_non_nullable
                       as String,
+            imageUrl: freezed == imageUrl
+                ? _value.imageUrl
+                : imageUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -82,7 +91,7 @@ abstract class _$$EventTypeImplCopyWith<$Res>
   ) = __$$EventTypeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({EType type, String content});
+  $Res call({EType type, String content, String? imageUrl});
 }
 
 /// @nodoc
@@ -98,7 +107,11 @@ class __$$EventTypeImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? type = null, Object? content = null}) {
+  $Res call({
+    Object? type = null,
+    Object? content = null,
+    Object? imageUrl = freezed,
+  }) {
     return _then(
       _$EventTypeImpl(
         type: null == type
@@ -109,6 +122,10 @@ class __$$EventTypeImplCopyWithImpl<$Res>
             ? _value.content
             : content // ignore: cast_nullable_to_non_nullable
                   as String,
+        imageUrl: freezed == imageUrl
+            ? _value.imageUrl
+            : imageUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -117,7 +134,7 @@ class __$$EventTypeImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$EventTypeImpl implements _EventType {
-  _$EventTypeImpl({required this.type, required this.content});
+  _$EventTypeImpl({required this.type, required this.content, this.imageUrl});
 
   factory _$EventTypeImpl.fromJson(Map<String, dynamic> json) =>
       _$$EventTypeImplFromJson(json);
@@ -126,10 +143,12 @@ class _$EventTypeImpl implements _EventType {
   final EType type;
   @override
   final String content;
+  @override
+  final String? imageUrl;
 
   @override
   String toString() {
-    return 'EventType(type: $type, content: $content)';
+    return 'EventType(type: $type, content: $content, imageUrl: $imageUrl)';
   }
 
   @override
@@ -138,12 +157,14 @@ class _$EventTypeImpl implements _EventType {
         (other.runtimeType == runtimeType &&
             other is _$EventTypeImpl &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.content, content) || other.content == content));
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, type, content);
+  int get hashCode => Object.hash(runtimeType, type, content, imageUrl);
 
   /// Create a copy of EventType
   /// with the given fields replaced by the non-null parameter values.
@@ -163,6 +184,7 @@ abstract class _EventType implements EventType {
   factory _EventType({
     required final EType type,
     required final String content,
+    final String? imageUrl,
   }) = _$EventTypeImpl;
 
   factory _EventType.fromJson(Map<String, dynamic> json) =
@@ -172,6 +194,8 @@ abstract class _EventType implements EventType {
   EType get type;
   @override
   String get content;
+  @override
+  String? get imageUrl;
 
   /// Create a copy of EventType
   /// with the given fields replaced by the non-null parameter values.
