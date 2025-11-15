@@ -74,7 +74,6 @@ class ClassroomControlPanel extends ConsumerWidget {
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 ref.read(homeProvider.notifier).endClass();
-                                ref.read(pipProvider.notifier).closePIPMode();
                                 context.go(Routes.home);
                               },
                               child: const Text('확인'),

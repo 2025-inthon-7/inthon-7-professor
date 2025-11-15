@@ -59,23 +59,26 @@ class ScreenCaptureService {
     _videoElement!.removeEventListener('loadedmetadata', onLoadedMetadata.toJS);
   }
 
-  // 현재 프레임을 이미지로 캡처
-  Future<Uint8List?> captureFrame() async {
+  Future<Uint8List?> captureFrame({double scale = 0.5}) async {
     if (_videoElement == null || _stream == null) {
       log('화면 공유가 시작되지 않았습니다');
       return null;
     }
 
     try {
-      final width = _videoElement!.videoWidth;
-      final height = _videoElement!.videoHeight;
+      final originalWidth = _videoElement!.videoWidth;
+      final originalHeight = _videoElement!.videoHeight;
 
-      if (width == 0 || height == 0) {
+      if (originalWidth == 0 || originalHeight == 0) {
         log('비디오 크기가 유효하지 않습니다');
         return null;
       }
 
-      // Canvas 생성
+      // 스케일 적용
+      final width = (originalWidth * scale).round();
+      final height = (originalHeight * scale).round();
+
+      // 리사이즈된 Canvas 생성
       final canvas =
           web.document.createElement('canvas') as web.HTMLCanvasElement
             ..width = width
@@ -83,21 +86,21 @@ class ScreenCaptureService {
 
       final ctx = canvas.getContext('2d') as web.CanvasRenderingContext2D;
 
-      // 현재 비디오 프레임을 canvas에 그리기
-      ctx.drawImage(_videoElement!, 0, 0);
+      // 비디오를 축소하여 그리기
+      ctx.drawImage(_videoElement!, 0, 0, width, height);
 
-      // Canvas를 Blob으로 변환
-      final blob = await _canvasToBlob(canvas);
+      // Canvas를 Blob으로 변환 (품질 조정 가능)
+      final blob = await _canvasToBlob(canvas, quality: 0.8);
 
       if (blob == null) {
         log('Blob 생성 실패');
         return null;
       }
 
-      // Blob을 Uint8List로 변환
       final arrayBuffer = await blob.arrayBuffer().toDart;
       final uint8List = arrayBuffer.toDart.asUint8List();
 
+      log('캡처 완료: ${originalWidth}x$originalHeight → ${width}x$height');
       return uint8List;
     } catch (e) {
       log('프레임 캡처 실패: $e');

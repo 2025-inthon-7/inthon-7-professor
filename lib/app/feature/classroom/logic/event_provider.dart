@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/event_state.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/event_type.dart';
@@ -43,7 +44,7 @@ class EventProvider extends Notifier<EventState> {
   }
 
   void _handleSocket(Map<String, dynamic> data) async {
-    log('Handling socket data: $data');
+    debugPrint('Handling socket data: $data');
     final type = data['event'];
 
     final image = (await ScreenCaptureService.I.captureFrame())?.toList() ?? [];
@@ -72,12 +73,18 @@ class EventProvider extends Notifier<EventState> {
         event = event.copyWith(imageData: image);
         _updateEvent(event);
         break;
-
+      case "question_intent":
+        ref
+            .read(homeProvider.notifier)
+            .sendQuestionImage(id: data["question_id"]);
+        break;
       case "new_question":
         final event = EventType(
           type: EType.question,
-          content: "새로운 질문이 도착했어요.",
-          timestamp: data["created_at"],
+          content: data["cleaned_text"],
+          timestamp: DateTime.parse(
+            data["created_at"],
+          ).add(const Duration(hours: 9)),
           imageData: image,
         );
         _updateEvent(event);
@@ -99,7 +106,8 @@ class EventProvider extends Notifier<EventState> {
     } else {
       final updatedEvents = state.events.map((e) {
         if (e == recentEvent) {
-          if (recentEvent.count + 1 == 2) {
+          if (recentEvent.count + 1 == 2 &&
+              recentEvent.type == EType.difficult) {
             ref.read(homeProvider.notifier).sendHardFeedback();
           }
           return recentEvent.copyWith(count: recentEvent.count + 1);

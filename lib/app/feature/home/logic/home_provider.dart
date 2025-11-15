@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/api/api_service.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/pip_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_state.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:inthon_7_professor/app/routing/router_service.dart';
@@ -46,6 +47,7 @@ class HomeProvider extends Notifier<HomeState> {
   void sendHardFeedback() async {
     final image = await ScreenCaptureService.I.captureFrame();
     if (image == null || state.currentCourseSession == null) return;
+    log('Sending hard feedback with image size: ${image.length}');
     ApiService.I.sendHardFeedback(
       sessionId: state.currentCourseSession!.id,
       imageBytes: image,
@@ -102,11 +104,36 @@ class HomeProvider extends Notifier<HomeState> {
     );
   }
 
+  void sendQuestionImage({required int id}) async {
+    final image = await ScreenCaptureService.I.captureFrame();
+    if (image == null || state.currentCourseSession == null) return;
+
+    ApiService.I.sendQuestionImage(questionId: id, imageBytes: image);
+  }
+
   void endClass() {
     final service = ScreenCaptureService.I;
     service.stopScreenCapture();
+    ref.read(pipProvider.notifier).closePIPMode();
+    if (state.currentCourseSession != null) {
+      getSummary(state.currentCourseSession!.id);
+      // ApiService.I.endCourseSession(sessionId: state.currentCourseSession?.id);
+    }
     state = state.copyWith(selectedCourse: null, classSearchValue: '');
     socket?.close();
     socket = null;
+    RouterService.I.showToast('수업이 종료되었습니다.');
+  }
+
+  void getSummary(String sessionId) async {
+    final res = await ApiService.I.getSummary(sessionId: sessionId);
+    res.fold(
+      onSuccess: (data) {
+        log('Session Summary: $data');
+      },
+      onFailure: (error) {
+        log('getSummary error: $error');
+      },
+    );
   }
 }

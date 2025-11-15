@@ -28,7 +28,7 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: hsl(0 0% 98%);
-      padding: 20px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -51,7 +51,7 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
       font-weight: 600;
     }
     .content {
-      padding: 24px;
+      padding: 12px;
     }
     .image-container {
       width: 100%;
@@ -72,6 +72,7 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
       border-radius: 8px;
       border-left: 4px solid hsl(220 70% 50%);
     }
+
   </style>
 </head>
 <body>
@@ -90,34 +91,22 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
 </html>
 ''';
 
-  // Open new window with specified size
-  (pipWin as JSObject).callMethod(
-    'open'.toJS,
-    'about:blank'.toJS,
-    '_blank'.toJS,
-    'width=1200,height=800,resizable=yes,scrollbars=yes'.toJS,
-  );
-
   // Get the newly opened window
-  final newWindow = (pipWin as JSObject).getProperty<JSObject>('_newWin'.toJS);
+  final newWindow =
+      (pipWin as JSObject).callMethod(
+            'open'.toJS,
+            'about:blank'.toJS,
+            '_blank'.toJS,
+            'width=800,height=800,resizable=yes,scrollbars=yes'.toJS,
+          )
+          as JSObject?;
 
-  // Write HTML content to new window using a different approach
-  (pipWin as JSObject).callMethod(
-    'setTimeout'.toJS,
-    (() {
-      final openedWindows = (pipWin as JSObject).callMethod<JSObject>(
-        'open'.toJS,
-        'about:blank'.toJS,
-        '_blank'.toJS,
-        'width=800,height=600,resizable=yes,scrollbars=yes'.toJS,
-      );
-
-      final doc = openedWindows.getProperty<JSObject>('document'.toJS);
-      doc.callMethod('write'.toJS, htmlContent.toJS);
-      doc.callMethod('close'.toJS);
-    }.toJS),
-    0.toJS,
-  );
+  if (newWindow != null) {
+    final doc = newWindow.getProperty<JSObject>('document'.toJS);
+    doc.callMethod('open'.toJS);
+    doc.callMethod('write'.toJS, htmlContent.toJS);
+    doc.callMethod('close'.toJS);
+  }
 }
 
 JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
@@ -178,7 +167,7 @@ JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
 
           // 텍스트 컨테이너 생성
           final textContainer = pipWin.document.createElement('div');
-          textContainer.className = 'event-text';
+          textContainer.className = 'event-text text-ellipsis';
 
           // 텍스트와 NEW 배지 추가
           final textSpan = pipWin.document.createElement('span');
@@ -190,8 +179,6 @@ JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
           eventItem.appendChild(textContainer);
           eventList.appendChild(eventItem);
         }
-
-        print(eventList.innerHTML);
 
         eventList.scrollTop = eventList.scrollHeight;
       }

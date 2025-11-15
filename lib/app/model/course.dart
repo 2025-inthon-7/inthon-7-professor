@@ -10,11 +10,11 @@ extension CourseX on Course {
 @freezed
 class Course with _$Course {
   factory Course({
-    required int id,
+    @Default(-1) int id,
     required String code,
     required String name,
     required String professor,
-    required String time,
+    @Default("") String time,
   }) = _Course;
 
   factory Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);

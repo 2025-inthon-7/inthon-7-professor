@@ -34,7 +34,12 @@ class ApiService {
     required List<int> imageBytes,
   }) => _dio.post(
     '/sessions/$sessionId/important/',
-    data: FormData.fromMap({'screenshot': MultipartFile.fromBytes(imageBytes)}),
+    data: FormData.fromMap({
+      'screenshot': MultipartFile.fromBytes(
+        imageBytes,
+        filename: 'screenshot.png',
+      ),
+    }),
   );
 
   Future<Result<void>> sendHardFeedback({
@@ -42,6 +47,30 @@ class ApiService {
     required List<int> imageBytes,
   }) => _dio.post(
     '/sessions/$sessionId/hard-threshold-capture/',
-    data: FormData.fromMap({'screenshot': MultipartFile.fromBytes(imageBytes)}),
+    data: FormData.fromMap({
+      'screenshot': MultipartFile.fromBytes(
+        imageBytes,
+        filename: 'screenshot.png',
+      ),
+    }),
   );
+
+  Future<Result<void>> sendQuestionImage({
+    required int questionId,
+    required List<int> imageBytes,
+  }) => _dio.post(
+    '/questions/$questionId/capture/',
+    data: FormData.fromMap({
+      'screenshot': MultipartFile.fromBytes(
+        imageBytes,
+        filename: 'screenshot.png',
+      ),
+    }),
+  );
+
+  Future<Result<void>> endCourseSession({required String? sessionId}) =>
+      _dio.post('/sessions/$sessionId/end/');
+
+  Future<Result<dynamic>> getSummary({required String sessionId}) =>
+      _dio.get('/sessions/$sessionId/summary/');
 }

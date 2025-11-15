@@ -155,17 +155,18 @@ class __$$CourseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CourseImpl implements _Course {
   _$CourseImpl({
-    required this.id,
+    this.id = -1,
     required this.code,
     required this.name,
     required this.professor,
-    required this.time,
+    this.time = "",
   });
 
   factory _$CourseImpl.fromJson(Map<String, dynamic> json) =>
       _$$CourseImplFromJson(json);
 
   @override
+  @JsonKey()
   final int id;
   @override
   final String code;
@@ -174,6 +175,7 @@ class _$CourseImpl implements _Course {
   @override
   final String professor;
   @override
+  @JsonKey()
   final String time;
 
   @override
@@ -214,11 +216,11 @@ class _$CourseImpl implements _Course {
 
 abstract class _Course implements Course {
   factory _Course({
-    required final int id,
+    final int id,
     required final String code,
     required final String name,
     required final String professor,
-    required final String time,
+    final String time,
   }) = _$CourseImpl;
 
   factory _Course.fromJson(Map<String, dynamic> json) = _$CourseImpl.fromJson;

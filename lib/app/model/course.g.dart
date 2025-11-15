@@ -7,11 +7,11 @@ part of 'course.dart';
 // **************************************************************************
 
 _$CourseImpl _$$CourseImplFromJson(Map<String, dynamic> json) => _$CourseImpl(
-  id: (json['id'] as num).toInt(),
+  id: (json['id'] as num?)?.toInt() ?? -1,
   code: json['code'] as String,
   name: json['name'] as String,
   professor: json['professor'] as String,
-  time: json['time'] as String,
+  time: json['time'] as String? ?? "",
 );
 
 Map<String, dynamic> _$$CourseImplToJson(_$CourseImpl instance) =>

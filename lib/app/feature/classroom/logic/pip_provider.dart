@@ -46,6 +46,15 @@ const String _pipWindowStyles = '''
     background: hsl(0 0% 100%);
     padding: 8px 12px;
     overflow-y: auto;
+    
+  }
+
+  .text-ellipsis {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;  /* 표시할 줄 수 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   #event-list::-webkit-scrollbar {
@@ -72,7 +81,7 @@ const String _pipWindowStyles = '''
     padding: 8px;
     font-size: 13px;
     color: hsl(0 0% 20%);
-    line-height: 1.5;
+    line-height: 1.2;
     position: relative;
     border-radius: 6px;
     transition: all 0.2s;
@@ -104,6 +113,7 @@ const String _pipWindowStyles = '''
     border-radius: 50%;
     margin-top: 3px;
     flex-shrink: 0;
+    color: #FFFFFF;
     text-align: center;
     font-size: 13px;
   }
@@ -292,7 +302,6 @@ class PipProvider extends Notifier<PipState> {
           'timestamp': DateFormat('HH:mm:ss').format(events[i].timestamp),
         }.jsify();
       }
-      log(message.toString());
 
       pip.postMessage(message.jsify() as JSObject, '*');
     }
