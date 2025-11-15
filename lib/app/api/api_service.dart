@@ -3,6 +3,7 @@ import 'package:inthon_7_professor/app/api/dio_client.dart';
 import 'package:inthon_7_professor/app/api/result.dart';
 import 'package:inthon_7_professor/app/auth/auth_service.dart';
 import 'package:get_it/get_it.dart';
+import 'package:inthon_7_professor/app/model/course.dart';
 
 class ApiService {
   static ApiService get I => GetIt.I<ApiService>();
@@ -15,4 +16,9 @@ class ApiService {
   ApiService() {
     _dio = MyDio(dio: Dio());
   }
+
+  Future<Result<List<Course>>> getCources() => _dio.get(
+    '/cources',
+    fromJson: (data) => [for (final item in data) Course.fromJson(item)],
+  );
 }
