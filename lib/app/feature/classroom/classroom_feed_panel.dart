@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:inthon_7_professor/app/feature/classroom/classroom_card.dart';
+import 'package:inthon_7_professor/app/feature/classroom/classroom_feed_help_dialog.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
+
+class ClassroomFeedPanel extends ConsumerStatefulWidget {
+  const ClassroomFeedPanel({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ClassroomFeedPanelState();
+}
+
+class _ClassroomFeedPanelState extends ConsumerState<ClassroomFeedPanel> {
+  @override
+  Widget build(BuildContext context) {
+    return ClassroomCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: const Text(
+                  '실시간 학생 피드',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              ShadIconButton.ghost(
+                icon: Icon(Icons.help),
+                onPressed: () {
+                  showShadDialog(
+                    context: context,
+                    builder: (c) => ClassroomFeedHelpDialog(),
+                  );
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 10, width: double.maxFinite),
+          Expanded(
+            child: AnimationLimiter(
+              child: ListView.builder(
+                itemCount: 20,
+                itemBuilder: (context, index) {
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: Text('학생 피드 항목 ${index + 1}'),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
