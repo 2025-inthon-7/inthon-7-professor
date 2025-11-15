@@ -28,4 +28,20 @@ class ApiService {
         '/courses/$courseId/today-session/',
         fromJson: (data) => CourseSession.fromJson(data),
       );
+
+  Future<Result<void>> sendImportantNotification({
+    required String sessionId,
+    required List<int> imageBytes,
+  }) => _dio.post(
+    '/sessions/$sessionId/important/',
+    data: FormData.fromMap({'screenshot': MultipartFile.fromBytes(imageBytes)}),
+  );
+
+  Future<Result<void>> sendHardFeedback({
+    required String sessionId,
+    required List<int> imageBytes,
+  }) => _dio.post(
+    '/sessions/$sessionId/hard-threshold-capture/',
+    data: FormData.fromMap({'screenshot': MultipartFile.fromBytes(imageBytes)}),
+  );
 }

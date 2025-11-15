@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/extension/build_context_x.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_type.dart';
 
 /// Data point for difficulty chart
 class DifficultyPoint {
@@ -21,45 +23,70 @@ class ClassroomDifficultyChart extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Dummy data for testing
     final now = DateTime.now();
-    final List<DifficultyPoint> data = [
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 45)),
-        difficulty: 0,
-      ),
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 40)),
-        difficulty: 2,
-      ),
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 35)),
-        difficulty: 3,
-      ),
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 30)),
-        difficulty: 1,
-      ),
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 25)),
-        difficulty: -1,
-      ),
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 20)),
-        difficulty: -3,
-      ),
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 15)),
-        difficulty: -2,
-      ),
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 10)),
-        difficulty: 0,
-      ),
-      DifficultyPoint(
-        time: now.subtract(const Duration(minutes: 5)),
-        difficulty: 3,
-      ),
-      DifficultyPoint(time: now, difficulty: 5),
-    ];
+    List<DifficultyPoint> data = [];
+    final eventState = ref.watch(eventProvider);
+
+    // info 이벤트 찾기 (시작점)
+    DateTime startTime = () {
+      for (var event in eventState.events) {
+        if (event.type == EType.info) {
+          return event.timestamp;
+        }
+      }
+      return now;
+    }();
+
+    // 시작 시간을 분 단위로 truncate
+    DateTime currentMinute = DateTime(
+      startTime.year,
+      startTime.month,
+      startTime.day,
+      startTime.hour,
+      startTime.minute,
+    );
+
+    // 현재 시간까지 1분 간격으로 Map 초기화
+    Map<DateTime, int> minuteGroups = {};
+    DateTime endTime = now;
+
+    while (currentMinute.isBefore(endTime) ||
+        currentMinute.isAtSameMomentAs(endTime)) {
+      minuteGroups[currentMinute] = 0;
+      currentMinute = currentMinute.add(Duration(minutes: 1));
+    }
+
+    // 이벤트들을 처리하여 해당 분에 difficulty 누적
+    for (var event in eventState.events) {
+      if (event.type == EType.info) {
+        continue; // info는 시작점으로만 사용하므로 skip
+      }
+
+      // timestamp를 분 단위로 truncate
+      DateTime minuteKey = DateTime(
+        event.timestamp.year,
+        event.timestamp.month,
+        event.timestamp.day,
+        event.timestamp.hour,
+        event.timestamp.minute,
+      );
+
+      // 해당 분이 범위 내에 있는지 확인
+      if (minuteGroups.containsKey(minuteKey)) {
+        if (event.type == EType.difficult) {
+          minuteGroups[minuteKey] = minuteGroups[minuteKey]! + event.count;
+        } else if (event.type == EType.easy) {
+          minuteGroups[minuteKey] = minuteGroups[minuteKey]! - event.count;
+        }
+      }
+    }
+
+    // Map을 DifficultyPoint 리스트로 변환 (시간 순)
+    var sortedMinutes = minuteGroups.keys.toList()..sort();
+    for (var minute in sortedMinutes) {
+      data.add(
+        DifficultyPoint(time: minute, difficulty: minuteGroups[minute]!),
+      );
+    }
 
     return DifficultyLineChart(data: data);
   }
@@ -99,10 +126,8 @@ class DifficultyLineChart extends StatelessWidget {
       final maxVal = max(dataMax.abs(), dataMin.abs());
       minY = -maxVal;
       maxY = maxVal;
-
-      // Ensure 0 is always visible
-      if (minY > 0) minY = -2;
-      if (maxY < 0) maxY = 2;
+      if (minY == 0) minY = -1;
+      if (maxY == 0) maxY = 1;
     }
 
     return LineChartData(
@@ -151,7 +176,7 @@ class DifficultyLineChart extends StatelessWidget {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 50,
+      maxX: 75,
       minY: minY,
       maxY: maxY,
       lineBarsData: spots.isEmpty
@@ -160,7 +185,7 @@ class DifficultyLineChart extends StatelessWidget {
               LineChartBarData(
                 spots: spots,
                 isCurved: true,
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: gradientColors,
                   stops: [0.0, 0.7, 1.0],
                 ),

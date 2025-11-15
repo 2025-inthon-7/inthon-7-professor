@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
@@ -6,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/extension/js_interlop_x.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/event_type.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/js_helper.dart';
+import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:web/helpers.dart';
 import 'package:web/web.dart' as web;
@@ -97,11 +99,13 @@ const String _pipWindowStyles = '''
   }
 
   .event-icon {
-    width: 8px;
-    height: 8px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    margin-top: 5px;
+    margin-top: 3px;
     flex-shrink: 0;
+    text-align: center;
+    font-size: 13px;
   }
 
   .event-icon.question {
@@ -114,6 +118,10 @@ const String _pipWindowStyles = '''
 
   .event-icon.easy {
     background: #10B981;
+  }
+
+  .event-icon.info {
+    background: #6366F1;
   }
 
   .event-text {
@@ -255,9 +263,7 @@ class PipProvider extends Notifier<PipState> {
           final action = jsData.getProperty<JSString?>('action'.toJS)?.toDart;
 
           if (source == 'pip' && action == 'buttonClicked') {
-            final timestamp = DateTime.now().toString().substring(11, 19);
-            final newEvent = 'Event from PIP at $timestamp';
-            log('PIP button clicked: $newEvent');
+            ref.read(homeProvider.notifier).sendImportantNotification();
           } else if (source == 'pip' && action == 'closed') {
             state = state.copyWith(isInPipMode: false);
             setPipWindow = null;
@@ -267,23 +273,33 @@ class PipProvider extends Notifier<PipState> {
     );
   }
 
-  void sendEventsToPip(EventType type) {
+  void updateEvents(List<EventType> events) {
     if (!state.isInPipMode) return;
     final pip = pipWindow;
     if (pip != null && !pip.closed) {
-      final message = {
+      Map message = <String, dynamic>{
         'action': 'updateEvents',
-        'event': type.content,
-        'time': DateFormat('HH:mm:ss').format(DateTime.now()),
-        'type': type.type.name,
-        'imageUrl': type.imageUrl,
-      }.jsify();
+        'eventsCount': events.length,
+      };
+      for (int i = 0; i < events.length; i++) {
+        message['events$i'] = {
+          'type': events[i].type.name,
+          'event': events[i].content,
+          'imageUrl': events[i].imageData.isNotEmpty
+              ? 'data:image/png;base64,${base64Encode(events[i].imageData)}'
+              : '',
+          'count': events[i].count,
+          'timestamp': DateFormat('HH:mm:ss').format(events[i].timestamp),
+        }.jsify();
+      }
+      log(message.toString());
 
-      pip.postMessage(message, '*');
+      pip.postMessage(message.jsify() as JSObject, '*');
     }
   }
 
   Future<void> startPIPMode(List<EventType> events) async {
+    log('Starting PIP mode with ${events.length} events');
     try {
       // Check if documentPictureInPicture is available
       if (documentPictureInPicture == null) {
@@ -291,7 +307,7 @@ class PipProvider extends Notifier<PipState> {
         return;
       }
 
-      final options = {'width': 200, 'height': 300}.jsify();
+      final options = {'width': 220, 'height': 330}.jsify();
       final pipWin = await documentPictureInPicture!
           .callMethod<JSPromise<PIPWindow>>('requestWindow'.toJS, options)
           .toDart;
@@ -345,11 +361,7 @@ class PipProvider extends Notifier<PipState> {
       );
 
       state = state.copyWith(isInPipMode: true);
-
-      // Send initial events
-      for (var event in events) {
-        sendEventsToPip(event);
-      }
+      updateEvents(events);
     } catch (e) {
       log('Error opening PIP: $e');
       RouterService.I.showToast('PIP를 열 수 없습니다: $e');

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_card.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_feed_help_dialog.dart';
+import 'package:inthon_7_professor/app/feature/classroom/feed_event_title.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class ClassroomFeedPanel extends ConsumerStatefulWidget {
@@ -16,6 +18,7 @@ class ClassroomFeedPanel extends ConsumerStatefulWidget {
 class _ClassroomFeedPanelState extends ConsumerState<ClassroomFeedPanel> {
   @override
   Widget build(BuildContext context) {
+    final events = ref.watch(eventProvider).events;
     return ClassroomCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,15 +46,17 @@ class _ClassroomFeedPanelState extends ConsumerState<ClassroomFeedPanel> {
           Expanded(
             child: AnimationLimiter(
               child: ListView.builder(
-                itemCount: 20,
+                itemCount: events.length,
                 itemBuilder: (context, index) {
+                  final event = events[index];
+
                   return AnimationConfiguration.staggeredList(
                     position: index,
                     duration: const Duration(milliseconds: 375),
                     child: SlideAnimation(
                       verticalOffset: 50.0,
                       child: FadeInAnimation(
-                        child: Text('학생 피드 항목 ${index + 1}'),
+                        child: FeedEventTitle(event: event),
                       ),
                     ),
                   );

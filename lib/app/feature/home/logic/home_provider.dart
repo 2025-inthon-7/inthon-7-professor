@@ -1,17 +1,22 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/api/api_service.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_state.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:inthon_7_professor/app/routing/router_service.dart';
 import 'package:inthon_7_professor/app/service/screen_capture_service.dart';
+import 'package:web_socket/web_socket.dart';
 
 final homeProvider = NotifierProvider<HomeProvider, HomeState>(
   HomeProvider.new,
 );
 
 class HomeProvider extends Notifier<HomeState> {
+  WebSocket? socket;
+
   @override
   build() {
     return HomeState();
@@ -38,6 +43,15 @@ class HomeProvider extends Notifier<HomeState> {
     state = state.copyWith(selectedCourse: course);
   }
 
+  void sendHardFeedback() async {
+    final image = await ScreenCaptureService.I.captureFrame();
+    if (image == null || state.currentCourseSession == null) return;
+    ApiService.I.sendHardFeedback(
+      sessionId: state.currentCourseSession!.id,
+      imageBytes: image,
+    );
+  }
+
   Future<bool> startClass() async {
     if (state.selectedCourse == null) return false;
     state = state.copyWith(isStartingClass: true);
@@ -48,8 +62,12 @@ class HomeProvider extends Notifier<HomeState> {
     );
     state = state.copyWith(isStartingClass: false);
     return res.fold(
-      onSuccess: (data) {
+      onSuccess: (data) async {
         state = state.copyWith(currentCourseSession: data);
+        socket = await WebSocket.connect(
+          Uri.parse('ws://34.50.32.200/ws/session/${data.id}/teacher/'),
+        );
+        ref.read(eventProvider.notifier).listenSocket(socket);
         RouterService.I.showToast('수업이 성공적으로 시작되었습니다!');
         return success;
       },
@@ -75,11 +93,20 @@ class HomeProvider extends Notifier<HomeState> {
     return await service.captureFrame();
   }
 
-  void sendImportantNotification() {}
+  void sendImportantNotification() async {
+    final image = await ScreenCaptureService.I.captureFrame();
+    if (image == null || state.currentCourseSession == null) return;
+    ApiService.I.sendImportantNotification(
+      sessionId: state.currentCourseSession!.id,
+      imageBytes: image,
+    );
+  }
 
   void endClass() {
     final service = ScreenCaptureService.I;
     service.stopScreenCapture();
     state = state.copyWith(selectedCourse: null, classSearchValue: '');
+    socket?.close();
+    socket = null;
   }
 }

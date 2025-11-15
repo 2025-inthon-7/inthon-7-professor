@@ -4,6 +4,8 @@ import 'package:inthon_7_professor/app/feature/classroom/classroom_captured_scre
 import 'package:inthon_7_professor/app/feature/classroom/classroom_control_panel.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_feed_panel.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_info_panel.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_type.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/pip_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
 
@@ -18,7 +20,16 @@ class _ClassroomPageState extends ConsumerState<ClassroomPage> {
   @override
   void initState() {
     super.initState();
-    ref.read(pipProvider.notifier).startPIPMode([]);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final startEvent = EventType(
+        type: EType.info,
+        content: '수업이 시작되었습니다.',
+        timestamp: DateTime.now(),
+        count: 0,
+      );
+      ref.read(eventProvider.notifier).startClass(startEvent);
+      ref.read(pipProvider.notifier).startPIPMode([startEvent]);
+    });
   }
 
   @override
@@ -30,8 +41,8 @@ class _ClassroomPageState extends ConsumerState<ClassroomPage> {
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Row(
-            children: [
-              const Expanded(
+            children: const [
+              Expanded(
                 child: Column(
                   children: [
                     ClassroomCapturedScreen(),
@@ -40,7 +51,7 @@ class _ClassroomPageState extends ConsumerState<ClassroomPage> {
                   ],
                 ),
               ),
-              const SizedBox(width: 17),
+              SizedBox(width: 17),
               SizedBox(
                 width: 300,
                 child: Column(
@@ -48,7 +59,7 @@ class _ClassroomPageState extends ConsumerState<ClassroomPage> {
                   children: [
                     Expanded(child: ClassroomFeedPanel()),
                     SizedBox(height: 17),
-                    const ClassroomControlPanel(),
+                    ClassroomControlPanel(),
                   ],
                 ),
               ),
