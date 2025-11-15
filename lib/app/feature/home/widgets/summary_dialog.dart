@@ -110,22 +110,48 @@ class SummaryDialog extends StatelessWidget {
             ),
 
             if (summary.important_moments.isNotEmpty) ...[
-              Text('중요한 포인트', style: theme.textTheme.h4),
+              Text(
+                '중요한 포인트 ${summary.important_moments.length}개',
+                style: theme.textTheme.h4,
+              ),
               ...summary.important_moments.map((moment) {
                 if (moment.capture_url == null && moment.note.isEmpty) {
                   return SizedBox.shrink();
                 }
                 return ClassroomCard(
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: 200,
-                        height: 100,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: CachedNetworkImage(
-                            imageUrl: moment.capture_url!,
-                            fit: BoxFit.cover,
+                      GestureDetector(
+                        onTap: () {
+                          showShadDialog(
+                            context: context,
+                            builder: (context) {
+                              return ShadDialog(
+                                constraints: BoxConstraints(
+                                  maxWidth: 1000,
+                                  maxHeight: 800,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () => Navigator.of(context).pop(),
+                                  child: CachedNetworkImage(
+                                    imageUrl: moment.capture_url!,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: SizedBox(
+                          width: 200,
+                          height: 120,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              imageUrl: moment.capture_url!,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -133,6 +159,7 @@ class SummaryDialog extends StatelessWidget {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
                           spacing: 8,
                           children: [
                             Row(
