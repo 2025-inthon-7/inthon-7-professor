@@ -3,7 +3,6 @@ import 'dart:ui_web' as ui_web;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/extension/build_context_x.dart';
-import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
 import 'package:inthon_7_professor/app/service/screen_capture_service.dart';
 import 'package:uuid/uuid.dart';
 
