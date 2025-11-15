@@ -6,25 +6,12 @@ import 'package:inthon_7_professor/app/extension/build_context_x.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_state.dart';
 import 'package:inthon_7_professor/app/feature/home/widgets/tutorial_dialog.dart';
+import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:inthon_7_professor/app/routing/router_service.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-const frameworks = {
-  'nextjs': 'Next.js',
-  'svelte': 'SvelteKit',
-  'nuxtjs': 'Nuxt.js',
-  'remix': 'Remix',
-  'astro': 'Astro',
-};
-
 class HomeInitialPanel extends ConsumerWidget {
   const HomeInitialPanel({super.key});
-
-  Map<String, String> filteredFrameworks(String searchValue) => {
-    for (final framework in frameworks.entries)
-      if (framework.value.toLowerCase().contains(searchValue.toLowerCase()))
-        framework.key: framework.value,
-  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +19,7 @@ class HomeInitialPanel extends ConsumerWidget {
 
     return Center(
       child: ShadCard(
-        width: 300,
+        width: 400,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +30,7 @@ class HomeInitialPanel extends ConsumerWidget {
               children: [
                 const SizedBox(height: 12),
                 ShadButton(
-                  enabled: state.className.isNotEmpty,
+                  enabled: state.selectedCourse != null,
                   width: double.maxFinite,
                   onPressed: () async {
                     if (ref.read(homeProvider).isStartingClass) return;
@@ -80,43 +67,53 @@ class HomeInitialPanel extends ConsumerWidget {
   }
 
   Widget _selectClass(WidgetRef ref, HomeState state, BuildContext context) {
+    final cources = state.cources;
+    final filteredCources = cources.where((cource) {
+      return cource.displayName.toLowerCase().contains(
+        state.classSearchValue.toLowerCase(),
+      );
+    }).toList();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('수업 선택', style: context.textTheme.small),
         const SizedBox(height: 12),
-        ShadSelect<String>.withSearch(
-          minWidth: 250,
-          maxWidth: 250,
+        ShadSelect<int>.withSearch(
+          minWidth: 350,
+          maxWidth: 350,
           maxHeight: 400,
-          placeholder: const Text('Select framework...'),
+          placeholder: const Text('수업을 선택 해 주세요..'),
           onSearchChanged: (value) =>
               ref.read(homeProvider.notifier).onSearchClassName(value),
           onChanged: (value) {
             if (value != null) {
-              ref.read(homeProvider.notifier).onSelectClassName(value);
+              ref
+                  .read(homeProvider.notifier)
+                  .onSelectCourse(
+                    cources.firstWhere((cource) => cource.id == value),
+                  );
             }
           },
-          searchPlaceholder: const Text('Search framework'),
+          searchPlaceholder: const Text('검색'),
           options: [
-            if (filteredFrameworks(state.classSearchValue).isEmpty)
+            if (filteredCources.isEmpty)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 24),
-                child: Text('No framework found'),
+                child: Text('검색 결과가 없습니다.'),
               ),
-            ...frameworks.entries.map((framework) {
+            ...cources.map((course) {
               return Offstage(
-                offstage: !filteredFrameworks(
-                  state.classSearchValue,
-                ).containsKey(framework.key),
+                offstage: !filteredCources.contains(course),
                 child: ShadOption(
-                  value: framework.key,
-                  child: Text(framework.value),
+                  value: course.id,
+                  child: Text(course.displayName),
                 ),
               );
             }),
           ],
-          selectedOptionBuilder: (context, value) => Text(frameworks[value]!),
+          selectedOptionBuilder: (context, value) => Text(
+            cources.firstWhere((cource) => cource.id == value).displayName,
+          ),
         ),
       ],
     );

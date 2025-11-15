@@ -56,10 +56,16 @@ class _ClassroomInfoPanelState extends ConsumerState<ClassroomInfoPanel> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(state.className, style: context.textTheme.h3),
+                Text(
+                  state.selectedCourse?.name ?? "",
+                  style: context.textTheme.h3,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, bottom: 5),
-                  child: Text("COSE-322-01", style: context.textTheme.small),
+                  child: Text(
+                    state.selectedCourse?.code ?? "",
+                    style: context.textTheme.small,
+                  ),
                 ),
                 const Spacer(),
                 Align(

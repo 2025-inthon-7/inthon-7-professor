@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inthon_7_professor/app/api/api_service.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_state.dart';
+import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:inthon_7_professor/app/service/screen_capture_service.dart';
 
 final homeProvider = NotifierProvider<HomeProvider, HomeState>(
@@ -14,14 +16,25 @@ class HomeProvider extends Notifier<HomeState> {
     return HomeState();
   }
 
+  void getCources() async {
+    final res = await ApiService.I.getCourses();
+    res.fold(
+      onSuccess: (data) {
+        state = state.copyWith(cources: data);
+      },
+      onFailure: (error) {
+        log('getCourses error: $error');
+      },
+    );
+  }
+
   void onSearchClassName(String searchValue) {
     log('onSearchClassName: $searchValue');
     state = state.copyWith(classSearchValue: searchValue);
   }
 
-  void onSelectClassName(String className) {
-    log('onSelectClassName: $className');
-    state = state.copyWith(className: className);
+  void onSelectCourse(Course course) {
+    state = state.copyWith(selectedCourse: course);
   }
 
   Future<bool> startClass() async {
@@ -50,6 +63,6 @@ class HomeProvider extends Notifier<HomeState> {
   void endClass() {
     final service = ScreenCaptureService.I;
     service.stopScreenCapture();
-    state = state.copyWith(className: '', classSearchValue: '');
+    state = state.copyWith(selectedCourse: null, classSearchValue: '');
   }
 }

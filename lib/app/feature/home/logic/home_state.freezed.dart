@@ -21,7 +21,8 @@ HomeState _$HomeStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$HomeState {
-  String get className => throw _privateConstructorUsedError;
+  List<Course> get cources => throw _privateConstructorUsedError;
+  Course? get selectedCourse => throw _privateConstructorUsedError;
   String get classSearchValue => throw _privateConstructorUsedError;
   bool get isStartingClass => throw _privateConstructorUsedError;
 
@@ -40,7 +41,14 @@ abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res, HomeState>;
   @useResult
-  $Res call({String className, String classSearchValue, bool isStartingClass});
+  $Res call({
+    List<Course> cources,
+    Course? selectedCourse,
+    String classSearchValue,
+    bool isStartingClass,
+  });
+
+  $CourseCopyWith<$Res>? get selectedCourse;
 }
 
 /// @nodoc
@@ -58,16 +66,21 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? className = null,
+    Object? cources = null,
+    Object? selectedCourse = freezed,
     Object? classSearchValue = null,
     Object? isStartingClass = null,
   }) {
     return _then(
       _value.copyWith(
-            className: null == className
-                ? _value.className
-                : className // ignore: cast_nullable_to_non_nullable
-                      as String,
+            cources: null == cources
+                ? _value.cources
+                : cources // ignore: cast_nullable_to_non_nullable
+                      as List<Course>,
+            selectedCourse: freezed == selectedCourse
+                ? _value.selectedCourse
+                : selectedCourse // ignore: cast_nullable_to_non_nullable
+                      as Course?,
             classSearchValue: null == classSearchValue
                 ? _value.classSearchValue
                 : classSearchValue // ignore: cast_nullable_to_non_nullable
@@ -80,6 +93,20 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
           as $Val,
     );
   }
+
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CourseCopyWith<$Res>? get selectedCourse {
+    if (_value.selectedCourse == null) {
+      return null;
+    }
+
+    return $CourseCopyWith<$Res>(_value.selectedCourse!, (value) {
+      return _then(_value.copyWith(selectedCourse: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -91,7 +118,15 @@ abstract class _$$HomeStateImplCopyWith<$Res>
   ) = __$$HomeStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String className, String classSearchValue, bool isStartingClass});
+  $Res call({
+    List<Course> cources,
+    Course? selectedCourse,
+    String classSearchValue,
+    bool isStartingClass,
+  });
+
+  @override
+  $CourseCopyWith<$Res>? get selectedCourse;
 }
 
 /// @nodoc
@@ -108,16 +143,21 @@ class __$$HomeStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? className = null,
+    Object? cources = null,
+    Object? selectedCourse = freezed,
     Object? classSearchValue = null,
     Object? isStartingClass = null,
   }) {
     return _then(
       _$HomeStateImpl(
-        className: null == className
-            ? _value.className
-            : className // ignore: cast_nullable_to_non_nullable
-                  as String,
+        cources: null == cources
+            ? _value._cources
+            : cources // ignore: cast_nullable_to_non_nullable
+                  as List<Course>,
+        selectedCourse: freezed == selectedCourse
+            ? _value.selectedCourse
+            : selectedCourse // ignore: cast_nullable_to_non_nullable
+                  as Course?,
         classSearchValue: null == classSearchValue
             ? _value.classSearchValue
             : classSearchValue // ignore: cast_nullable_to_non_nullable
@@ -135,17 +175,26 @@ class __$$HomeStateImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$HomeStateImpl implements _HomeState {
   _$HomeStateImpl({
-    this.className = '',
+    final List<Course> cources = const [],
+    this.selectedCourse,
     this.classSearchValue = '',
     this.isStartingClass = false,
-  });
+  }) : _cources = cources;
 
   factory _$HomeStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$HomeStateImplFromJson(json);
 
+  final List<Course> _cources;
   @override
   @JsonKey()
-  final String className;
+  List<Course> get cources {
+    if (_cources is EqualUnmodifiableListView) return _cources;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_cources);
+  }
+
+  @override
+  final Course? selectedCourse;
   @override
   @JsonKey()
   final String classSearchValue;
@@ -155,7 +204,7 @@ class _$HomeStateImpl implements _HomeState {
 
   @override
   String toString() {
-    return 'HomeState(className: $className, classSearchValue: $classSearchValue, isStartingClass: $isStartingClass)';
+    return 'HomeState(cources: $cources, selectedCourse: $selectedCourse, classSearchValue: $classSearchValue, isStartingClass: $isStartingClass)';
   }
 
   @override
@@ -163,8 +212,9 @@ class _$HomeStateImpl implements _HomeState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$HomeStateImpl &&
-            (identical(other.className, className) ||
-                other.className == className) &&
+            const DeepCollectionEquality().equals(other._cources, _cources) &&
+            (identical(other.selectedCourse, selectedCourse) ||
+                other.selectedCourse == selectedCourse) &&
             (identical(other.classSearchValue, classSearchValue) ||
                 other.classSearchValue == classSearchValue) &&
             (identical(other.isStartingClass, isStartingClass) ||
@@ -173,8 +223,13 @@ class _$HomeStateImpl implements _HomeState {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, className, classSearchValue, isStartingClass);
+  int get hashCode => Object.hash(
+    runtimeType,
+    const DeepCollectionEquality().hash(_cources),
+    selectedCourse,
+    classSearchValue,
+    isStartingClass,
+  );
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
@@ -192,7 +247,8 @@ class _$HomeStateImpl implements _HomeState {
 
 abstract class _HomeState implements HomeState {
   factory _HomeState({
-    final String className,
+    final List<Course> cources,
+    final Course? selectedCourse,
     final String classSearchValue,
     final bool isStartingClass,
   }) = _$HomeStateImpl;
@@ -201,7 +257,9 @@ abstract class _HomeState implements HomeState {
       _$HomeStateImpl.fromJson;
 
   @override
-  String get className;
+  List<Course> get cources;
+  @override
+  Course? get selectedCourse;
   @override
   String get classSearchValue;
   @override

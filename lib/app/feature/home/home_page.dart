@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:inthon_7_professor/app/extension/build_context_x.dart';
+import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/widgets/home_initial_panel.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(homeProvider.notifier).getCources();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(

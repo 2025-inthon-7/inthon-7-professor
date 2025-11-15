@@ -17,8 +17,8 @@ class ApiService {
     _dio = MyDio(dio: Dio());
   }
 
-  Future<Result<List<Course>>> getCources() => _dio.get(
-    '/cources',
+  Future<Result<List<Course>>> getCourses() => _dio.get(
+    '/courses',
     fromJson: (data) => [for (final item in data) Course.fromJson(item)],
   );
 }
