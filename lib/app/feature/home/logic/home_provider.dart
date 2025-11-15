@@ -26,12 +26,13 @@ class HomeProvider extends Notifier<HomeState> {
     state = state.copyWith(className: className);
   }
 
-  Future<void> startClass() async {
+  Future<bool> startClass() async {
     state = state.copyWith(isStartingClass: true);
     service = ScreenCaptureService();
-    await service.startScreenCapture();
+    final success = await service.startScreenCapture();
     await Future.delayed(const Duration(milliseconds: 10));
     state = state.copyWith(isStartingClass: false);
+    return success;
   }
 
   void reSelectScreen() async {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/extension/build_context_x.dart';
@@ -15,18 +17,27 @@ class ClassroomInfoPanel extends ConsumerStatefulWidget {
 }
 
 class _ClassroomInfoPanelState extends ConsumerState<ClassroomInfoPanel> {
-  Stopwatch? stopwatch;
+  Timer? timer;
+  int elapsedSeconds = 0;
 
   @override
   void initState() {
     super.initState();
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      elapsedSeconds++;
+      setState(() {});
+    });
+  }
 
-    stopwatch = Stopwatch()..start();
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   String get elapsedTime {
-    if (stopwatch == null) return "00:00:00";
-    final elapsed = stopwatch!.elapsed;
+    if (timer == null) return "00:00:00";
+    final elapsed = Duration(seconds: elapsedSeconds);
     final hours = elapsed.inHours.toString().padLeft(2, '0');
     final minutes = (elapsed.inMinutes % 60).toString().padLeft(2, '0');
     final seconds = (elapsed.inSeconds % 60).toString().padLeft(2, '0');

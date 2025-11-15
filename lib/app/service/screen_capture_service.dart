@@ -10,7 +10,7 @@ class ScreenCaptureService {
   web.HTMLVideoElement? _videoElement;
 
   // 화면 공유 시작
-  Future<void> startScreenCapture() async {
+  Future<bool> startScreenCapture() async {
     try {
       // getDisplayMedia 호출
       final mediaDevices = web.window.navigator.mediaDevices;
@@ -36,8 +36,10 @@ class ScreenCaptureService {
       _videoElement!.play();
 
       log('화면 캡처 시작 성공');
+      return true;
     } catch (e) {
       log('화면 캡처 시작 실패: $e');
+      return false;
     }
   }
 

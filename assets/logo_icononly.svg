@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="warmGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF8E53;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5DADE2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="url(#warmGradient)" opacity="0.1"/>
+  
+  <!-- Book/platform base -->
+  <rect x="80" y="260" width="240" height="35" rx="8" fill="url(#blueGradient)"/>
+  
+  <!-- Body (simple robe/shirt) -->
+  <path d="M 135 205 L 135 260 L 265 260 L 265 205 Z" fill="url(#blueGradient)"/>
+  
+  <!-- Arms pointing to interaction elements -->
+  <path d="M 135 225 L 85 255" stroke="url(#warmGradient)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M 265 225 L 315 255" stroke="url(#warmGradient)" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Torso circle -->
+  <circle cx="200" cy="205" r="55" fill="url(#warmGradient)"/>
+  
+  <!-- Head -->
+  <circle cx="200" cy="145" r="55" fill="url(#warmGradient)"/>
+  
+  <!-- Academic cap (larger) -->
+  <polygon points="200,70 130,95 270,95" fill="#2C3E50"/>
+  <rect x="192" y="50" width="16" height="25" fill="#2C3E50"/>
+  <circle cx="200" cy="45" r="6" fill="#FFD93D"/>
+  
+  <!-- Glasses -->
+  <ellipse cx="180" cy="140" rx="15" ry="13" fill="none" stroke="#2C3E50" stroke-width="4"/>
+  <ellipse cx="220" cy="140" rx="15" ry="13" fill="none" stroke="#2C3E50" stroke-width="4"/>
+  <line x1="195" y1="140" x2="205" y2="140" stroke="#2C3E50" stroke-width="4"/>
+  
+  <!-- Eyes -->
+  <circle cx="180" cy="140" r="5" fill="#2C3E50"/>
+  <circle cx="220" cy="140" r="5" fill="#2C3E50"/>
+  
+  <!-- Smile -->
+  <path d="M 180 160 Q 200 170 220 160" fill="none" stroke="#2C3E50" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Question mark (left side) - larger -->
+  <circle cx="75" cy="265" r="22" fill="#FFD93D"/>
+  <text x="75" y="278" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#2C3E50" text-anchor="middle">?</text>
+  
+  <!-- Light bulb (right side) - larger -->
+  <circle cx="325" cy="258" r="16" fill="#FFD93D"/>
+  <path d="M 318 273 L 332 273 L 329 284 L 321 284 Z" fill="#FFD93D"/>
+  <line x1="325" y1="239" x2="325" y2="232" stroke="#FFD93D" stroke-width="3"/>
+  <line x1="305" y1="248" x2="300" y2="243" stroke="#FFD93D" stroke-width="3"/>
+  <line x1="345" y1="248" x2="350" y2="243" stroke="#FFD93D" stroke-width="3"/>
+  
+  <!-- Decorative sparkles -->
+  <circle cx="110" cy="130" r="4" fill="#FFD93D" opacity="0.7"/>
+  <circle cx="290" cy="130" r="4" fill="#FFD93D" opacity="0.7"/>
+  <circle cx="130" cy="110" r="3" fill="#4ECDC4" opacity="0.7"/>
+  <circle cx="270" cy="110" r="3" fill="#4ECDC4" opacity="0.7"/>
+  <circle cx="150" cy="180" r="3" fill="#FFD93D" opacity="0.5"/>
+  <circle cx="250" cy="180" r="3" fill="#FFD93D" opacity="0.5"/>
+</svg>

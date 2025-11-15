@@ -37,7 +37,7 @@ class ClassroomControlPanel extends ConsumerWidget {
                   enabled: !ref.watch(pipProvider).isInPipMode,
                   width: double.maxFinite,
                   onPressed: () {
-                    ref.read(pipProvider.notifier).startPIPMode();
+                    ref.read(pipProvider.notifier).startPIPMode([]);
                   },
                   child: const Text('수업 재개'),
                 ),

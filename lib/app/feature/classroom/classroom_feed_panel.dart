@@ -22,18 +22,18 @@ class _ClassroomFeedPanelState extends ConsumerState<ClassroomFeedPanel> {
         children: [
           Row(
             children: [
-              Expanded(
-                child: const Text(
+              const Expanded(
+                child: Text(
                   '실시간 학생 피드',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
               ShadIconButton.ghost(
-                icon: Icon(Icons.help),
+                icon: const Icon(Icons.help),
                 onPressed: () {
                   showShadDialog(
                     context: context,
-                    builder: (c) => ClassroomFeedHelpDialog(),
+                    builder: (c) => const ClassroomFeedHelpDialog(),
                   );
                 },
               ),

@@ -3,6 +3,9 @@ import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_type.dart';
+import 'package:intl/intl.dart';
+import 'package:web/helpers.dart';
 import 'package:web/web.dart' as web;
 
 import 'package:inthon_7_professor/app/feature/classroom/logic/pip_state.dart';
@@ -31,12 +34,10 @@ class PipProvider extends Notifier<PipState> {
           final action = jsData.getProperty<JSString?>('action'.toJS)?.toDart;
 
           if (source == 'pip' && action == 'buttonClicked') {
-            // PIP에서 버튼 클릭 이벤트 수신
             final timestamp = DateTime.now().toString().substring(11, 19);
             final newEvent = 'Event from PIP at $timestamp';
             log('PIP button clicked: $newEvent');
           } else if (source == 'pip' && action == 'closed') {
-            // PIP 창이 닫혔을 때
             state = state.copyWith(isInPipMode: false);
             setPipWindow = null;
           }
@@ -45,22 +46,22 @@ class PipProvider extends Notifier<PipState> {
     );
   }
 
-  void sendEventsToPip() {
+  void sendEventsToPip(EventType type) {
     if (!state.isInPipMode) return;
     final pip = pipWindow;
     if (pip != null && !pip.closed) {
       final message = {
         'action': 'updateEvents',
-        'event':
-            'New event at ${DateTime.now().toLocal().toString().substring(11, 19)}',
-        'type': 'question', // 'question', 'difficult', 'easy' 중 하나
+        'event': type.content,
+        'time': DateFormat('HH:mm:ss').format(DateTime.now()),
+        'type': type.type,
       }.jsify();
 
       pip.postMessage(message, '*');
     }
   }
 
-  Future<void> startPIPMode() async {
+  Future<void> startPIPMode(List<EventType> events) async {
     try {
       // Check if documentPictureInPicture is available
       if (documentPictureInPicture == null) {
@@ -384,7 +385,9 @@ class PipProvider extends Notifier<PipState> {
       state = state.copyWith(isInPipMode: true);
 
       // Send initial events
-      sendEventsToPip();
+      for (var event in events) {
+        sendEventsToPip(event);
+      }
     } catch (e) {
       log('Error opening PIP: $e');
       RouterService.I.showToast('PIP를 열 수 없습니다: $e');

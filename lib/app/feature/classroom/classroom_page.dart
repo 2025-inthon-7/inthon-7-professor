@@ -1,20 +1,11 @@
-import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:inthon_7_professor/app/extension/build_context_x.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_captured_screen.dart';
-import 'package:inthon_7_professor/app/feature/classroom/classroom_card.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_control_panel.dart';
-import 'package:inthon_7_professor/app/feature/classroom/classroom_difficulty_chart.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_feed_panel.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_info_panel.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/pip_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
-import 'package:inthon_7_professor/app/routing/router_service.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
-import 'package:uuid/uuid.dart';
 
 class ClassroomPage extends ConsumerStatefulWidget {
   const ClassroomPage({super.key});
@@ -24,6 +15,12 @@ class ClassroomPage extends ConsumerStatefulWidget {
 }
 
 class _ClassroomPageState extends ConsumerState<ClassroomPage> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(pipProvider.notifier).startPIPMode([]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homeProvider);

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:inthon_7_professor/app/extension/build_context_x.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_state.dart';
+import 'package:inthon_7_professor/app/feature/home/widgets/tutorial_dialog.dart';
 import 'package:inthon_7_professor/app/routing/router_service.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -40,18 +41,34 @@ class HomeInitialPanel extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 24),
-                Text('수업 시작', style: context.textTheme.small),
                 const SizedBox(height: 12),
                 ShadButton(
                   width: double.maxFinite,
                   onPressed: () async {
                     if (ref.read(homeProvider).isStartingClass) return;
-                    ref.read(homeProvider.notifier).startClass().then((_) {
-                      context.go(Routes.classRoom);
+                    ref.read(homeProvider.notifier).startClass().then((
+                      success,
+                    ) {
+                      if (success && context.mounted) {
+                        context.go(Routes.classRoom);
+                      }
                     });
                   },
-                  child: const Text('화면 선택'),
+                  child: const Text('수업 시작'),
+                ),
+                const SizedBox(height: 5),
+                ShadButton.ghost(
+                  width: double.maxFinite,
+                  onPressed: () {
+                    showShadDialog(
+                      context: context,
+                      builder: (context) {
+                        return TutorialDialog();
+                      },
+                    );
+                  },
+
+                  child: const Text('나작교가 뭔가요?'),
                 ),
               ],
             ),

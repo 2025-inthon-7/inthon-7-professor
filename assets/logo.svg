@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="warmGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF8E53;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5DADE2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="url(#warmGradient)" opacity="0.1"/>
+  
+  <!-- Book/platform base -->
+  <rect x="100" y="240" width="200" height="30" rx="5" fill="url(#blueGradient)"/>
+  
+  <!-- Body (simple robe/shirt) -->
+  <path d="M 155 185 L 155 230 L 245 230 L 245 185 Z" fill="url(#blueGradient)"/>
+  
+  <!-- Arms pointing to interaction elements -->
+  <path d="M 155 200 L 120 220" stroke="url(#warmGradient)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 245 200 L 280 220" stroke="url(#warmGradient)" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Torso circle -->
+  <circle cx="200" cy="185" r="45" fill="url(#warmGradient)"/>
+  
+  <!-- Head -->
+  <circle cx="200" cy="140" r="45" fill="url(#warmGradient)"/>
+  
+  <!-- Academic cap -->
+  <polygon points="200,80 145,100 255,100" fill="#2C3E50"/>
+  <rect x="193" y="65" width="14" height="20" fill="#2C3E50"/>
+  <circle cx="200" cy="60" r="5" fill="#FFD93D"/>
+  
+  <!-- Glasses -->
+  <ellipse cx="185" cy="135" rx="12" ry="10" fill="none" stroke="#2C3E50" stroke-width="3"/>
+  <ellipse cx="215" cy="135" rx="12" ry="10" fill="none" stroke="#2C3E50" stroke-width="3"/>
+  <line x1="197" y1="135" x2="203" y2="135" stroke="#2C3E50" stroke-width="3"/>
+  
+  <!-- Eyes -->
+  <circle cx="185" cy="135" r="4" fill="#2C3E50"/>
+  <circle cx="215" cy="135" r="4" fill="#2C3E50"/>
+  
+  <!-- Smile -->
+  <path d="M 185 150 Q 200 158 215 150" fill="none" stroke="#2C3E50" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Question mark (left side) -->
+  <circle cx="110" cy="230" r="18" fill="#FFD93D"/>
+  <text x="110" y="240" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#2C3E50" text-anchor="middle">?</text>
+  
+  <!-- Light bulb (right side) -->
+  <circle cx="290" cy="225" r="12" fill="#FFD93D"/>
+  <path d="M 285 237 L 295 237 L 293 245 L 287 245 Z" fill="#FFD93D"/>
+  <line x1="290" y1="210" x2="290" y2="205" stroke="#FFD93D" stroke-width="2"/>
+  <line x1="275" y1="217" x2="271" y2="213" stroke="#FFD93D" stroke-width="2"/>
+  <line x1="305" y1="217" x2="309" y2="213" stroke="#FFD93D" stroke-width="2"/>
+  
+  <!-- Service name - 기본 시스템 폰트 사용 -->
+  <text x="200" y="310" font-family="sans-serif" font-size="36" font-weight="700" fill="#2C3E50" text-anchor="middle">나작교</text>
+  <text x="200" y="335" font-family="sans-serif" font-size="14" font-weight="400" fill="#7F8C8D" text-anchor="middle">나만의 작은 교수</text>
+  
+  <!-- Decorative dots -->
+  <circle cx="130" cy="170" r="3" fill="#FFD93D" opacity="0.6"/>
+  <circle cx="270" cy="170" r="3" fill="#FFD93D" opacity="0.6"/>
+  <circle cx="150" cy="150" r="2" fill="#4ECDC4" opacity="0.6"/>
+  <circle cx="250" cy="150" r="2" fill="#4ECDC4" opacity="0.6"/>
+</svg>
