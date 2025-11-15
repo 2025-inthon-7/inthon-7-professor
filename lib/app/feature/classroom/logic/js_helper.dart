@@ -18,7 +18,8 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
   popup.className = 'popup-overlay';
 
   // 팝업 내용 생성
-  popup.innerHTML = '''
+  popup.innerHTML =
+      '''
     <div class="popup-content">
       <div class="popup-header">
         <h3>Event Details</h3>
@@ -33,7 +34,8 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
         <p class="popup-text">$content</p>
       </div>
     </div>
-  '''.toJS;
+  '''
+          .toJS;
 
   // body에 팝업 추가
   pipWin.document.body!.appendChild(popup);
@@ -41,17 +43,23 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
   // 닫기 버튼 이벤트
   final closeBtn = pipWin.document.getElementById('popup-close-btn');
   if (closeBtn != null) {
-    closeBtn.onclick = ((web.MouseEvent event) {
-      popup.remove();
-    }.toJS);
+    closeBtn.addEventListener(
+      'click',
+      ((web.Event event) {
+        popup.remove();
+      }.toJS),
+    );
   }
 
   // 오버레이 클릭 시 닫기
-  popup.onclick = ((web.MouseEvent event) {
-    if (event.target == popup) {
-      popup.remove();
-    }
-  }.toJS);
+  popup.addEventListener(
+    'click',
+    ((web.Event event) {
+      if (event.target == popup) {
+        popup.remove();
+      }
+    }.toJS),
+  );
 }
 
 JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
@@ -91,12 +99,18 @@ JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
           if (imageUrl != null && imageUrl.isNotEmpty) {
             eventItem.setAttribute('data-image-url', imageUrl);
             eventItem.setAttribute('data-content', eventText);
-            (eventItem as JSObject).setProperty('style.cursor'.toJS, 'pointer'.toJS);
+            (eventItem as JSObject).setProperty(
+              'style.cursor'.toJS,
+              'pointer'.toJS,
+            );
 
             // 클릭 이벤트 추가
-            eventItem.onclick = ((web.MouseEvent event) {
-              _showEventPopup(pipWin, eventText, imageUrl);
-            }.toJS);
+            eventItem.addEventListener(
+              'click',
+              ((web.Event event) {
+                _showEventPopup(pipWin, eventText, imageUrl);
+              }.toJS),
+            );
           }
 
           // 아이콘 생성

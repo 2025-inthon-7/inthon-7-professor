@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_card.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_type.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/pip_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
 import 'package:inthon_7_professor/app/routing/router_service.dart';
@@ -24,8 +25,17 @@ class ClassroomControlPanel extends ConsumerWidget {
             onPressed: () {
               // ref.read(homeProvider.notifier).sendImportantNotification();
               //TODO
-              final aa = ref.read(homeProvider.notifier).getCapturedScreen();
-              log(aa.toString());
+              // final aa = ref.read(homeProvider.notifier).getCapturedScreen();
+              ref
+                  .read(pipProvider.notifier)
+                  .sendEventsToPip(
+                    EventType(
+                      type: EType.question,
+                      content: '중요 알림이 도착했습니다.',
+                      imageUrl: "dd",
+                    ),
+                  );
+              // log(aa.toString());
             },
             child: const Text('중요 알림 보내기'),
           ),
