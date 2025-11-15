@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/api/api_service.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_state.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
+import 'package:inthon_7_professor/app/routing/router_service.dart';
 import 'package:inthon_7_professor/app/service/screen_capture_service.dart';
 
 final homeProvider = NotifierProvider<HomeProvider, HomeState>(
@@ -38,12 +39,28 @@ class HomeProvider extends Notifier<HomeState> {
   }
 
   Future<bool> startClass() async {
+    if (state.selectedCourse == null) return false;
     state = state.copyWith(isStartingClass: true);
     final service = ScreenCaptureService.I;
     final success = await service.startScreenCapture();
-    await Future.delayed(const Duration(milliseconds: 10));
+    final res = await ApiService.I.getTodayCourseSession(
+      state.selectedCourse!.code,
+    );
     state = state.copyWith(isStartingClass: false);
-    return success;
+    return res.fold(
+      onSuccess: (data) {
+        state = state.copyWith(currentCourseSession: data);
+        RouterService.I.showToast('수업이 성공적으로 시작되었습니다!');
+        return success;
+      },
+      onFailure: (error) {
+        log('getTodayCourseSession error: $error');
+        service.stopScreenCapture();
+        RouterService.I.showToast('수업 시작에 실패했습니다.');
+
+        return false;
+      },
+    );
   }
 
   void reSelectScreen() async {

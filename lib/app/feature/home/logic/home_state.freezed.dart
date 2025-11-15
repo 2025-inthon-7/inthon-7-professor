@@ -25,6 +25,7 @@ mixin _$HomeState {
   Course? get selectedCourse => throw _privateConstructorUsedError;
   String get classSearchValue => throw _privateConstructorUsedError;
   bool get isStartingClass => throw _privateConstructorUsedError;
+  CourseSession? get currentCourseSession => throw _privateConstructorUsedError;
 
   /// Serializes this HomeState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,9 +47,11 @@ abstract class $HomeStateCopyWith<$Res> {
     Course? selectedCourse,
     String classSearchValue,
     bool isStartingClass,
+    CourseSession? currentCourseSession,
   });
 
   $CourseCopyWith<$Res>? get selectedCourse;
+  $CourseSessionCopyWith<$Res>? get currentCourseSession;
 }
 
 /// @nodoc
@@ -70,6 +73,7 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     Object? selectedCourse = freezed,
     Object? classSearchValue = null,
     Object? isStartingClass = null,
+    Object? currentCourseSession = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -89,6 +93,10 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
                 ? _value.isStartingClass
                 : isStartingClass // ignore: cast_nullable_to_non_nullable
                       as bool,
+            currentCourseSession: freezed == currentCourseSession
+                ? _value.currentCourseSession
+                : currentCourseSession // ignore: cast_nullable_to_non_nullable
+                      as CourseSession?,
           )
           as $Val,
     );
@@ -107,6 +115,20 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
       return _then(_value.copyWith(selectedCourse: value) as $Val);
     });
   }
+
+  /// Create a copy of HomeState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $CourseSessionCopyWith<$Res>? get currentCourseSession {
+    if (_value.currentCourseSession == null) {
+      return null;
+    }
+
+    return $CourseSessionCopyWith<$Res>(_value.currentCourseSession!, (value) {
+      return _then(_value.copyWith(currentCourseSession: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -123,10 +145,13 @@ abstract class _$$HomeStateImplCopyWith<$Res>
     Course? selectedCourse,
     String classSearchValue,
     bool isStartingClass,
+    CourseSession? currentCourseSession,
   });
 
   @override
   $CourseCopyWith<$Res>? get selectedCourse;
+  @override
+  $CourseSessionCopyWith<$Res>? get currentCourseSession;
 }
 
 /// @nodoc
@@ -147,6 +172,7 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     Object? selectedCourse = freezed,
     Object? classSearchValue = null,
     Object? isStartingClass = null,
+    Object? currentCourseSession = freezed,
   }) {
     return _then(
       _$HomeStateImpl(
@@ -166,6 +192,10 @@ class __$$HomeStateImplCopyWithImpl<$Res>
             ? _value.isStartingClass
             : isStartingClass // ignore: cast_nullable_to_non_nullable
                   as bool,
+        currentCourseSession: freezed == currentCourseSession
+            ? _value.currentCourseSession
+            : currentCourseSession // ignore: cast_nullable_to_non_nullable
+                  as CourseSession?,
       ),
     );
   }
@@ -179,6 +209,7 @@ class _$HomeStateImpl implements _HomeState {
     this.selectedCourse,
     this.classSearchValue = '',
     this.isStartingClass = false,
+    this.currentCourseSession,
   }) : _cources = cources;
 
   factory _$HomeStateImpl.fromJson(Map<String, dynamic> json) =>
@@ -201,10 +232,12 @@ class _$HomeStateImpl implements _HomeState {
   @override
   @JsonKey()
   final bool isStartingClass;
+  @override
+  final CourseSession? currentCourseSession;
 
   @override
   String toString() {
-    return 'HomeState(cources: $cources, selectedCourse: $selectedCourse, classSearchValue: $classSearchValue, isStartingClass: $isStartingClass)';
+    return 'HomeState(cources: $cources, selectedCourse: $selectedCourse, classSearchValue: $classSearchValue, isStartingClass: $isStartingClass, currentCourseSession: $currentCourseSession)';
   }
 
   @override
@@ -218,7 +251,9 @@ class _$HomeStateImpl implements _HomeState {
             (identical(other.classSearchValue, classSearchValue) ||
                 other.classSearchValue == classSearchValue) &&
             (identical(other.isStartingClass, isStartingClass) ||
-                other.isStartingClass == isStartingClass));
+                other.isStartingClass == isStartingClass) &&
+            (identical(other.currentCourseSession, currentCourseSession) ||
+                other.currentCourseSession == currentCourseSession));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -229,6 +264,7 @@ class _$HomeStateImpl implements _HomeState {
     selectedCourse,
     classSearchValue,
     isStartingClass,
+    currentCourseSession,
   );
 
   /// Create a copy of HomeState
@@ -251,6 +287,7 @@ abstract class _HomeState implements HomeState {
     final Course? selectedCourse,
     final String classSearchValue,
     final bool isStartingClass,
+    final CourseSession? currentCourseSession,
   }) = _$HomeStateImpl;
 
   factory _HomeState.fromJson(Map<String, dynamic> json) =
@@ -264,6 +301,8 @@ abstract class _HomeState implements HomeState {
   String get classSearchValue;
   @override
   bool get isStartingClass;
+  @override
+  CourseSession? get currentCourseSession;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
