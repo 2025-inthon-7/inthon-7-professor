@@ -275,7 +275,7 @@ class PipProvider extends Notifier<PipState> {
         'action': 'updateEvents',
         'event': type.content,
         'time': DateFormat('HH:mm:ss').format(DateTime.now()),
-        'type': type.type,
+        'type': type.type.name,
         'imageUrl': type.imageUrl,
       }.jsify();
 

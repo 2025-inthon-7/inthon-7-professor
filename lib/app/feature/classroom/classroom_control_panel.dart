@@ -30,7 +30,7 @@ class ClassroomControlPanel extends ConsumerWidget {
                   .read(pipProvider.notifier)
                   .sendEventsToPip(
                     EventType(
-                      type: EType.question,
+                      type: EType.difficult,
                       content: '중요 알림이 도착했습니다.',
                       imageUrl: "dd",
                     ),
