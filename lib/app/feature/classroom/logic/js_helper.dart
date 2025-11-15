@@ -153,9 +153,10 @@ JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
           if (eventType == 'EType.difficult' || eventType == 'EType.easy') {
             final existingItems = eventList.querySelectorAll('.event-item');
             for (var i = 0; i < existingItems.length; i++) {
-              final item = existingItems.item(i);
-              if (item == null) continue;
+              final node = existingItems.item(i);
+              if (node == null) continue;
 
+              final item = node as web.Element;
               final itemType = item.getAttribute('data-type');
               final itemTimestamp = item.getAttribute('data-timestamp');
 
