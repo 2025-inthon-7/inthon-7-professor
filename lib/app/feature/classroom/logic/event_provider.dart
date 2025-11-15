@@ -91,7 +91,7 @@ class EventProvider extends Notifier<EventState> {
 
         break;
       case "question_like_update":
-        _updateQuestionLike(data["question_id"], data["like_count"]);
+        _updateQuestionLike(data["question_id"], data["like_count"] + 1);
         break;
     }
   }
