@@ -56,7 +56,10 @@ class _ClassroomFeedPanelState extends ConsumerState<ClassroomFeedPanel> {
                     child: SlideAnimation(
                       verticalOffset: 50.0,
                       child: FadeInAnimation(
-                        child: FeedEventTitle(event: event),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: FeedEventTitle(event: event),
+                        ),
                       ),
                     ),
                   );

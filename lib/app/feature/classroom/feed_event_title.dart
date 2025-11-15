@@ -96,7 +96,29 @@ class FeedEventTitle extends StatelessWidget {
               ShadBadge(child: Text('${event.count}')),
             ],
           ),
-          _ => Container(),
+          EType.question => Row(
+            children: [
+              Icon(Icons.help, color: context.colorScheme.primary),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event.content,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.small,
+                    ),
+                    Text(
+                      '${event.timestamp.hour.toString().padLeft(2, '0')}:${event.timestamp.minute.toString().padLeft(2, '0')}',
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         },
       ),
     );

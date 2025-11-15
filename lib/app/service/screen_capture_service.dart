@@ -90,7 +90,7 @@ class ScreenCaptureService {
       ctx.drawImage(_videoElement!, 0, 0, width, height);
 
       // Canvas를 Blob으로 변환 (품질 조정 가능)
-      final blob = await _canvasToBlob(canvas, quality: 0.8);
+      final blob = await _canvasToBlob(canvas);
 
       if (blob == null) {
         log('Blob 생성 실패');
