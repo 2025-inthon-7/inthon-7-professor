@@ -11,6 +11,8 @@ _$EventTypeImpl _$$EventTypeImplFromJson(Map<String, dynamic> json) =>
       type: $enumDecode(_$ETypeEnumMap, json['type']),
       content: json['content'] as String,
       imageUrl: json['imageUrl'] as String?,
+      timestamp: DateTime.parse(json['timestamp'] as String),
+      mergedCount: (json['mergedCount'] as num?)?.toInt() ?? 1,
     );
 
 Map<String, dynamic> _$$EventTypeImplToJson(_$EventTypeImpl instance) =>
@@ -18,6 +20,8 @@ Map<String, dynamic> _$$EventTypeImplToJson(_$EventTypeImpl instance) =>
       'type': _$ETypeEnumMap[instance.type]!,
       'content': instance.content,
       'imageUrl': instance.imageUrl,
+      'timestamp': instance.timestamp.toIso8601String(),
+      'mergedCount': instance.mergedCount,
     };
 
 const _$ETypeEnumMap = {

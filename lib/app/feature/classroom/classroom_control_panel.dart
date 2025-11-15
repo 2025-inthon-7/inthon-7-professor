@@ -33,6 +33,7 @@ class ClassroomControlPanel extends ConsumerWidget {
                       type: EType.difficult,
                       content: '중요 알림이 도착했습니다.',
                       imageUrl: "dd",
+                      timestamp: DateTime.now(),
                     ),
                   );
               // log(aa.toString());

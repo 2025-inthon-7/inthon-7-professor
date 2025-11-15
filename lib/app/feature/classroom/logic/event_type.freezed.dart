@@ -24,6 +24,8 @@ mixin _$EventType {
   EType get type => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
+  DateTime get timestamp => throw _privateConstructorUsedError;
+  int get mergedCount => throw _privateConstructorUsedError;
 
   /// Serializes this EventType to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +42,13 @@ abstract class $EventTypeCopyWith<$Res> {
   factory $EventTypeCopyWith(EventType value, $Res Function(EventType) then) =
       _$EventTypeCopyWithImpl<$Res, EventType>;
   @useResult
-  $Res call({EType type, String content, String? imageUrl});
+  $Res call({
+    EType type,
+    String content,
+    String? imageUrl,
+    DateTime timestamp,
+    int mergedCount,
+  });
 }
 
 /// @nodoc
@@ -61,6 +69,8 @@ class _$EventTypeCopyWithImpl<$Res, $Val extends EventType>
     Object? type = null,
     Object? content = null,
     Object? imageUrl = freezed,
+    Object? timestamp = null,
+    Object? mergedCount = null,
   }) {
     return _then(
       _value.copyWith(
@@ -76,6 +86,14 @@ class _$EventTypeCopyWithImpl<$Res, $Val extends EventType>
                 ? _value.imageUrl
                 : imageUrl // ignore: cast_nullable_to_non_nullable
                       as String?,
+            timestamp: null == timestamp
+                ? _value.timestamp
+                : timestamp // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            mergedCount: null == mergedCount
+                ? _value.mergedCount
+                : mergedCount // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -91,7 +109,13 @@ abstract class _$$EventTypeImplCopyWith<$Res>
   ) = __$$EventTypeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({EType type, String content, String? imageUrl});
+  $Res call({
+    EType type,
+    String content,
+    String? imageUrl,
+    DateTime timestamp,
+    int mergedCount,
+  });
 }
 
 /// @nodoc
@@ -111,6 +135,8 @@ class __$$EventTypeImplCopyWithImpl<$Res>
     Object? type = null,
     Object? content = null,
     Object? imageUrl = freezed,
+    Object? timestamp = null,
+    Object? mergedCount = null,
   }) {
     return _then(
       _$EventTypeImpl(
@@ -126,6 +152,14 @@ class __$$EventTypeImplCopyWithImpl<$Res>
             ? _value.imageUrl
             : imageUrl // ignore: cast_nullable_to_non_nullable
                   as String?,
+        timestamp: null == timestamp
+            ? _value.timestamp
+            : timestamp // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        mergedCount: null == mergedCount
+            ? _value.mergedCount
+            : mergedCount // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -134,7 +168,13 @@ class __$$EventTypeImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$EventTypeImpl implements _EventType {
-  _$EventTypeImpl({required this.type, required this.content, this.imageUrl});
+  _$EventTypeImpl({
+    required this.type,
+    required this.content,
+    this.imageUrl,
+    required this.timestamp,
+    this.mergedCount = 1,
+  });
 
   factory _$EventTypeImpl.fromJson(Map<String, dynamic> json) =>
       _$$EventTypeImplFromJson(json);
@@ -145,10 +185,15 @@ class _$EventTypeImpl implements _EventType {
   final String content;
   @override
   final String? imageUrl;
+  @override
+  final DateTime timestamp;
+  @override
+  @JsonKey()
+  final int mergedCount;
 
   @override
   String toString() {
-    return 'EventType(type: $type, content: $content, imageUrl: $imageUrl)';
+    return 'EventType(type: $type, content: $content, imageUrl: $imageUrl, timestamp: $timestamp, mergedCount: $mergedCount)';
   }
 
   @override
@@ -159,12 +204,17 @@ class _$EventTypeImpl implements _EventType {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl));
+                other.imageUrl == imageUrl) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp) &&
+            (identical(other.mergedCount, mergedCount) ||
+                other.mergedCount == mergedCount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, type, content, imageUrl);
+  int get hashCode =>
+      Object.hash(runtimeType, type, content, imageUrl, timestamp, mergedCount);
 
   /// Create a copy of EventType
   /// with the given fields replaced by the non-null parameter values.
@@ -185,6 +235,8 @@ abstract class _EventType implements EventType {
     required final EType type,
     required final String content,
     final String? imageUrl,
+    required final DateTime timestamp,
+    final int mergedCount,
   }) = _$EventTypeImpl;
 
   factory _EventType.fromJson(Map<String, dynamic> json) =
@@ -196,6 +248,10 @@ abstract class _EventType implements EventType {
   String get content;
   @override
   String? get imageUrl;
+  @override
+  DateTime get timestamp;
+  @override
+  int get mergedCount;
 
   /// Create a copy of EventType
   /// with the given fields replaced by the non-null parameter values.
