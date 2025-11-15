@@ -6,59 +6,119 @@ import 'package:inthon_7_professor/app/extension/js_interlop_x.dart';
 import 'package:web/web.dart' as web;
 
 void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
-  // 기존 팝업이 있으면 제거
-  final existingPopup = pipWin.document.getElementById('event-popup');
-  if (existingPopup != null) {
-    existingPopup.remove();
-  }
+  // Escape single quotes in content
+  final escapedContent = content.replaceAll("'", "\\'");
 
-  // 팝업 컨테이너 생성
-  final popup = pipWin.document.createElement('div');
-  popup.id = 'event-popup';
-  popup.className = 'popup-overlay';
-
-  // 팝업 내용 생성
-  popup.innerHTML =
-      '''
-    <div class="popup-content">
-      <div class="popup-header">
-        <h3>Event Details</h3>
-        <button class="popup-close" id="popup-close-btn">
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
+  // Create HTML content for new window
+  final htmlContent = '''
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Details</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: hsl(0 0% 98%);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .header {
+      background: hsl(0 0% 9%);
+      color: white;
+      padding: 16px 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .content {
+      padding: 24px;
+    }
+    .image-container {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .image-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .text-content {
+      font-size: 16px;
+      line-height: 1.6;
+      color: hsl(0 0% 20%);
+      padding: 16px;
+      background: hsl(0 0% 96%);
+      border-radius: 8px;
+      border-left: 4px solid hsl(220 70% 50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">Event Details</div>
+    <div class="content">
+      <div class="image-container">
+        <img src="$imageUrl" alt="Event Image" />
       </div>
-      <div class="popup-body">
-        <img src="$imageUrl" alt="Event Image" class="popup-image" />
-        <p class="popup-text">$content</p>
+      <div class="text-content">
+        $escapedContent
       </div>
     </div>
-  '''
-          .toJS;
+  </div>
+</body>
+</html>
+''';
 
-  // body에 팝업 추가
-  pipWin.document.body!.appendChild(popup);
+  // Open new window with specified size
+  (pipWin as JSObject).callMethod(
+    'open'.toJS,
+    'about:blank'.toJS,
+    '_blank'.toJS,
+    'width=800,height=600,resizable=yes,scrollbars=yes'.toJS,
+  );
 
-  // 닫기 버튼 이벤트
-  final closeBtn = pipWin.document.getElementById('popup-close-btn');
-  if (closeBtn != null) {
-    closeBtn.addEventListener(
-      'click',
-      ((web.Event event) {
-        popup.remove();
-      }.toJS),
-    );
-  }
+  // Get the newly opened window
+  final newWindow = (pipWin as JSObject).getProperty<JSObject>('_newWin'.toJS);
 
-  // 오버레이 클릭 시 닫기
-  popup.addEventListener(
-    'click',
-    ((web.Event event) {
-      if (event.target == popup) {
-        popup.remove();
+  // Write HTML content to new window using a different approach
+  (pipWin as JSObject).callMethod(
+    'setTimeout'.toJS,
+    (() {
+      final openedWindows = (pipWin as JSObject).callMethod<JSObject>(
+        'open'.toJS,
+        'about:blank'.toJS,
+        '_blank'.toJS,
+        'width=800,height=600,resizable=yes,scrollbars=yes'.toJS,
+      );
+
+      if (openedWindows != null) {
+        final doc = openedWindows.getProperty<JSObject>('document'.toJS);
+        if (doc != null) {
+          doc.callMethod('write'.toJS, htmlContent.toJS);
+          doc.callMethod('close'.toJS);
+        }
       }
     }.toJS),
+    0.toJS,
   );
 }
 
@@ -87,22 +147,60 @@ JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
             emptyState.remove();
           }
 
+          final currentTime = DateTime.now().millisecondsSinceEpoch;
+
+          // 1분 안에 나온 difficult, easy event 병합 체크
+          if (eventType == 'EType.difficult' || eventType == 'EType.easy') {
+            final existingItems =
+                eventList.querySelectorAll('.event-item').toIterable;
+            for (final item in existingItems) {
+              final itemType = item.getAttribute('data-type');
+              final itemTimestamp = item.getAttribute('data-timestamp');
+
+              if (itemType == eventType && itemTimestamp != null) {
+                final timestamp = int.tryParse(itemTimestamp);
+                if (timestamp != null &&
+                    (currentTime - timestamp) < 60000) {
+                  // 1분 이내
+                  // 기존 이벤트의 카운트 증가
+                  final countBadge = item.querySelector('.event-count');
+                  if (countBadge != null) {
+                    final currentCount =
+                        int.tryParse(countBadge.textContent ?? '1') ?? 1;
+                    countBadge.textContent = (currentCount + 1).toString();
+                  } else {
+                    // 카운트 배지가 없으면 생성
+                    final textContainer = item.querySelector('.event-text');
+                    if (textContainer != null) {
+                      final newCountBadge = pipWin.document.createElement('span');
+                      newCountBadge.className = 'event-count';
+                      newCountBadge.textContent = '2';
+                      textContainer.appendChild(newCountBadge);
+                    }
+                  }
+
+                  // 병합되었으므로 새 이벤트는 추가하지 않음
+                  log('Event merged: $eventText (type: $eventType)');
+                  return;
+                }
+              }
+            }
+          }
+
           // 새 이벤트 컨테이너 생성
           final eventItem = pipWin.document.createElement('div');
           eventItem.className = 'event-item';
           eventItem.setAttribute(
             'data-timestamp',
-            DateTime.now().millisecondsSinceEpoch.toString(),
+            currentTime.toString(),
           );
+          eventItem.setAttribute('data-type', eventType);
 
           // imageUrl이 있으면 저장하고 클릭 가능하게 표시
           if (imageUrl != null && imageUrl.isNotEmpty) {
+            eventItem.className = 'event-item clickable';
             eventItem.setAttribute('data-image-url', imageUrl);
             eventItem.setAttribute('data-content', eventText);
-            (eventItem as JSObject).setProperty(
-              'style.cursor'.toJS,
-              'pointer'.toJS,
-            );
 
             // 클릭 이벤트 추가
             eventItem.addEventListener(

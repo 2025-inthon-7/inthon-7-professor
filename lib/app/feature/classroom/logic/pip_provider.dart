@@ -67,11 +67,33 @@ const String _pipWindowStyles = '''
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    padding: 4px 0;
+    padding: 8px;
     font-size: 13px;
     color: hsl(0 0% 20%);
     line-height: 1.5;
     position: relative;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+
+  .event-item.clickable {
+    cursor: pointer;
+    background: hsl(210 40% 98%);
+    border: 1px solid hsl(210 40% 90%);
+  }
+
+  .event-item.clickable:hover {
+    background: hsl(210 40% 96%);
+    border-color: hsl(210 40% 80%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+
+  .event-item.clickable .event-text::after {
+    content: '🔍';
+    margin-left: 6px;
+    font-size: 12px;
+    opacity: 0.6;
   }
 
   .event-icon {
@@ -177,89 +199,17 @@ const String _pipWindowStyles = '''
     height: 16px;
   }
 
-  .event-item:hover {
-    background: hsl(0 0% 96.1%);
-    border-radius: 4px;
-  }
-
-  /* Popup Styles */
-  .popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-
-  .popup-content {
-    background: hsl(0 0% 100%);
-    border-radius: 8px;
-    width: 90%;
-    max-width: 400px;
-    max-height: 80vh;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid hsl(0 0% 89.8%);
-  }
-
-  .popup-header h3 {
-    margin: 0;
-    font-size: 16px;
+  .event-count {
+    display: inline-block;
+    background: hsl(220 70% 50%);
+    color: white;
+    font-size: 11px;
     font-weight: 600;
-    color: hsl(0 0% 3.9%);
-  }
-
-  .popup-close {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: hsl(0 0% 45.1%);
-    transition: color 0.2s;
-  }
-
-  .popup-close:hover {
-    color: hsl(0 0% 3.9%);
-  }
-
-  .popup-body {
-    padding: 16px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .popup-image {
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-    object-fit: cover;
-  }
-
-  .popup-text {
-    font-size: 14px;
-    line-height: 1.6;
-    color: hsl(0 0% 20%);
-    margin: 0;
-    word-break: break-word;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 6px;
+    min-width: 18px;
+    text-align: center;
   }
 ''';
 
