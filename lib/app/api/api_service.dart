@@ -3,6 +3,7 @@ import 'package:inthon_7_professor/app/api/dio_client.dart';
 import 'package:inthon_7_professor/app/api/result.dart';
 import 'package:inthon_7_professor/app/auth/auth_service.dart';
 import 'package:get_it/get_it.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/summary.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:inthon_7_professor/app/model/course_session.dart';
 
@@ -71,6 +72,8 @@ class ApiService {
   Future<Result<void>> endCourseSession({required String? sessionId}) =>
       _dio.post('/sessions/$sessionId/end/');
 
-  Future<Result<dynamic>> getSummary({required String sessionId}) =>
-      _dio.get('/sessions/$sessionId/summary/');
+  Future<Result<dynamic>> getSummary({required String sessionId}) => _dio.get(
+    '/sessions/$sessionId/summary/',
+    fromJson: (data) => Summary.fromJson(data),
+  );
 }

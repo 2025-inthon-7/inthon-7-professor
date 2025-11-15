@@ -18,7 +18,7 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Details</title>
+  <title>상세 내용</title>
   <style>
     * {
       margin: 0;
@@ -77,7 +77,7 @@ void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
 </head>
 <body>
   <div class="container">
-    <div class="header">Event Details</div>
+    <div class="header">상세 내용</div>
     <div class="content">
       <div class="image-container">
         <img src="$imageUrl" alt="Event Image" />

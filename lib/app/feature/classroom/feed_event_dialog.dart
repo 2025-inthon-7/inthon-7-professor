@@ -18,26 +18,27 @@ class FeedEventDialog extends StatelessWidget {
       title: Text(switch (event.type) {
         EType.difficult => '${event.count}명의 학생들이 아래 내용을 어려워하고 있어요',
         EType.easy => '${event.count}명의 학생들이 아래 내용을 잘 이해하고 있어요.',
-        EType.question => '새로운 질문이 도착했어요',
+        EType.question => ' ${event.count}명의 학생들이 아래 내용으로 궁금해하고 있어요.',
         EType.info => '알림',
       }),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 800,
             child: event.imageData.isNotEmpty
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.memory(
                       Uint8List.fromList(event.imageData),
+                      width: 800,
                       fit: BoxFit.contain,
                     ),
                   )
                 : Container(),
           ),
           SizedBox(height: 12),
-          Text(event.content, style: context.textTheme.h4),
+          if (event.type == EType.question)
+            Text(event.content, style: context.textTheme.h4),
         ],
       ),
     );

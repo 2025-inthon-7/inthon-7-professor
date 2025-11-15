@@ -77,7 +77,7 @@ const String _pipWindowStyles = '''
   .event-item {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    margin-bottom: 4px;
     padding: 8px;
     font-size: 13px;
     color: hsl(0 0% 20%);
@@ -85,6 +85,7 @@ const String _pipWindowStyles = '''
     position: relative;
     border-radius: 6px;
     transition: all 0.2s;
+    gap: 4px;
   }
 
   .event-item.clickable {
@@ -316,7 +317,7 @@ class PipProvider extends Notifier<PipState> {
         return;
       }
 
-      final options = {'width': 220, 'height': 330}.jsify();
+      final options = {'width': 250, 'height': 350}.jsify();
       final pipWin = await documentPictureInPicture!
           .callMethod<JSPromise<PIPWindow>>('requestWindow'.toJS, options)
           .toDart;

@@ -117,6 +117,8 @@ class FeedEventTitle extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
+              ShadBadge(child: Text('${event.count}')),
             ],
           ),
         },

@@ -90,7 +90,23 @@ class EventProvider extends Notifier<EventState> {
         _updateEvent(event);
 
         break;
+      case "question_like_update":
+        _updateQuestionLike(data["question_id"], data["like_count"]);
+        break;
     }
+  }
+
+  void _updateQuestionLike(int questionId, int likeCount) {
+    final updatedEvents = state.events.map((e) {
+      if (e.type == EType.question &&
+          e.content.contains('question_id:$questionId')) {
+        return e.copyWith(count: likeCount);
+      }
+      return e;
+    }).toList();
+
+    state = state.copyWith(events: updatedEvents);
+    ref.read(pipProvider.notifier).updateEvents(state.events);
   }
 
   void _updateEvent(EventType newEvent) {

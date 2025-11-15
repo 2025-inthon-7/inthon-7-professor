@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/api/api_service.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/pip_provider.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/summary.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_state.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:inthon_7_professor/app/routing/router_service.dart';
 import 'package:inthon_7_professor/app/service/screen_capture_service.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:web_socket/web_socket.dart';
 
 final homeProvider = NotifierProvider<HomeProvider, HomeState>(
@@ -116,8 +118,7 @@ class HomeProvider extends Notifier<HomeState> {
     service.stopScreenCapture();
     ref.read(pipProvider.notifier).closePIPMode();
     if (state.currentCourseSession != null) {
-      getSummary(state.currentCourseSession!.id);
-      // ApiService.I.endCourseSession(sessionId: state.currentCourseSession?.id);
+      ApiService.I.endCourseSession(sessionId: state.currentCourseSession!.id);
     }
     state = state.copyWith(selectedCourse: null, classSearchValue: '');
     socket?.close();
@@ -125,14 +126,15 @@ class HomeProvider extends Notifier<HomeState> {
     RouterService.I.showToast('수업이 종료되었습니다.');
   }
 
-  void getSummary(String sessionId) async {
+  Future<Summary?> getSummary(String sessionId) async {
     final res = await ApiService.I.getSummary(sessionId: sessionId);
-    res.fold(
+    return res.fold(
       onSuccess: (data) {
-        log('Session Summary: $data');
+        return data;
       },
       onFailure: (error) {
         log('getSummary error: $error');
+        return null;
       },
     );
   }

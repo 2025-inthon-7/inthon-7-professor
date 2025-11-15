@@ -1,13 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_card.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
-import 'package:inthon_7_professor/app/feature/classroom/logic/event_type.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/pip_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
+import 'package:inthon_7_professor/app/feature/home/widgets/summary_dialog.dart';
 import 'package:inthon_7_professor/app/routing/router_service.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -25,9 +23,6 @@ class ClassroomControlPanel extends ConsumerWidget {
             backgroundColor: Colors.orange,
             onPressed: () {
               ref.read(homeProvider.notifier).sendImportantNotification();
-              //TODO
-
-              // log(aa.toString());
             },
             child: const Text('중요 알림 보내기'),
           ),
@@ -71,8 +66,26 @@ class ClassroomControlPanel extends ConsumerWidget {
                               child: const Text('취소'),
                             ),
                             ShadButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.of(context).pop();
+                                ref
+                                    .read(homeProvider.notifier)
+                                    .getSummary(
+                                      ref
+                                          .read(homeProvider)
+                                          .currentCourseSession!
+                                          .id,
+                                    )
+                                    .then((summary) {
+                                      final c = RouterService.I.router.context;
+                                      if (c != null && summary != null) {
+                                        showDialog(
+                                          context: c,
+                                          builder: (context) =>
+                                              SummaryDialog(summary: summary),
+                                        );
+                                      }
+                                    });
                                 ref.read(homeProvider.notifier).endClass();
                                 context.go(Routes.home);
                               },
