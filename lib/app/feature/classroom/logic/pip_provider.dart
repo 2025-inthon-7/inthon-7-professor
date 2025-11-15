@@ -4,6 +4,7 @@ import 'dart:js_interop_unsafe';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/extension/js_interlop_x.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/event_type.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/js_helper.dart';
 import 'package:intl/intl.dart';
@@ -239,6 +240,14 @@ class PipProvider extends Notifier<PipState> {
   @override
   build() {
     _setupChannel();
+
+    // Watch EventProvider and update PIP when events change
+    ref.listen(eventProvider, (previous, next) {
+      if (state.isInPipMode) {
+        _sendAllEventsToPip(next.events);
+      }
+    });
+
     return PipState(isInPipMode: false);
   }
 
@@ -281,6 +290,72 @@ class PipProvider extends Notifier<PipState> {
 
       pip.postMessage(message, '*');
     }
+  }
+
+  /// Merge events that occur within 1 minute for difficult/easy types
+  List<EventType> _mergeEvents(List<EventType> events) {
+    if (events.isEmpty) return events;
+
+    final mergedEvents = <EventType>[];
+
+    for (var event in events) {
+      // Only merge difficult and easy events
+      if (event.type != EType.difficult && event.type != EType.easy) {
+        mergedEvents.add(event);
+        continue;
+      }
+
+      // Check if we can merge with the last event
+      if (mergedEvents.isNotEmpty) {
+        final lastEvent = mergedEvents.last;
+        final timeDiff = event.timestamp.difference(lastEvent.timestamp);
+
+        // Merge if same type and within 1 minute
+        if (lastEvent.type == event.type &&
+            timeDiff.inSeconds < 60 &&
+            timeDiff.inSeconds >= 0) {
+          // Replace last event with merged version
+          mergedEvents[mergedEvents.length - 1] = lastEvent.copyWith(
+            mergedCount: lastEvent.mergedCount + 1,
+          );
+          continue;
+        }
+      }
+
+      // Add as new event
+      mergedEvents.add(event);
+    }
+
+    return mergedEvents;
+  }
+
+  /// Send all events to PIP (replaces entire event list)
+  void _sendAllEventsToPip(List<EventType> events) {
+    if (!state.isInPipMode) return;
+    final pip = pipWindow;
+    if (pip == null || pip.closed) return;
+
+    // Merge events before sending
+    final mergedEvents = _mergeEvents(events);
+
+    // Convert events to JS format
+    final jsEvents = mergedEvents.map((event) {
+      return {
+        'content': event.content,
+        'time': DateFormat('HH:mm:ss').format(event.timestamp),
+        'type': event.type.name,
+        'imageUrl': event.imageUrl,
+        'mergedCount': event.mergedCount,
+        'timestamp': event.timestamp.millisecondsSinceEpoch,
+      };
+    }).toList();
+
+    final message = {
+      'action': 'replaceAllEvents',
+      'events': jsEvents,
+    }.jsify();
+
+    pip.postMessage(message, '*');
   }
 
   Future<void> startPIPMode(List<EventType> events) async {
@@ -346,10 +421,9 @@ class PipProvider extends Notifier<PipState> {
 
       state = state.copyWith(isInPipMode: true);
 
-      // Send initial events
-      for (var event in events) {
-        sendEventsToPip(event);
-      }
+      // Send initial events from EventProvider
+      final eventState = ref.read(eventProvider);
+      _sendAllEventsToPip(eventState.events);
     } catch (e) {
       log('Error opening PIP: $e');
       RouterService.I.showToast('PIP를 열 수 없습니다: $e');

@@ -11,6 +11,8 @@ class EventType with _$EventType {
     required EType type,
     required String content,
     String? imageUrl,
+    required DateTime timestamp,
+    @Default(1) int mergedCount,
   }) = _EventType;
 
   factory EventType.fromJson(Map<String, dynamic> json) =>

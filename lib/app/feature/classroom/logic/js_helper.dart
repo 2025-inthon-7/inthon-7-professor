@@ -132,7 +132,98 @@ JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
       final jsData = data as JSObject;
       final action = jsData.getProperty<JSString?>('action'.toJS)?.toDart;
 
-      if (action == 'updateEvents') {
+      if (action == 'replaceAllEvents') {
+        final eventList = pipWin.document.getElementById('event-list');
+        if (eventList == null) return;
+
+        final jsEvents = jsData.getProperty<JSArray?>('events'.toJS);
+        if (jsEvents == null) return;
+
+        // Clear existing events
+        eventList.innerHTML = ''.toJS;
+
+        // Check if events list is empty
+        if (jsEvents.length == 0) {
+          final emptyState = pipWin.document.createElement('div');
+          emptyState.className = 'empty-state';
+          emptyState.textContent = '아직 이벤트가 없습니다';
+          eventList.appendChild(emptyState);
+          return;
+        }
+
+        // Add all events
+        for (var i = 0; i < jsEvents.length; i++) {
+          final eventData = jsEvents[i] as JSObject;
+          final eventText =
+              eventData.getProperty<JSString?>('content'.toJS)?.toDart ?? '';
+          final eventType =
+              eventData.getProperty<JSString?>('type'.toJS)?.toDart ??
+                  'question';
+          final imageUrl =
+              eventData.getProperty<JSString?>('imageUrl'.toJS)?.toDart;
+          final mergedCount =
+              eventData.getProperty<JSNumber?>('mergedCount'.toJS)?.toDartInt ??
+                  1;
+          final timestamp = eventData
+                  .getProperty<JSNumber?>('timestamp'.toJS)
+                  ?.toDartInt ??
+              0;
+
+          // Create event container
+          final eventItem = pipWin.document.createElement('div');
+          eventItem.className = 'event-item';
+          eventItem.setAttribute('data-timestamp', timestamp.toString());
+          eventItem.setAttribute('data-type', eventType);
+
+          // Make clickable if has image
+          if (imageUrl != null && imageUrl.isNotEmpty) {
+            eventItem.className = 'event-item clickable';
+            eventItem.setAttribute('data-image-url', imageUrl);
+            eventItem.setAttribute('data-content', eventText);
+
+            // Add click event
+            eventItem.addEventListener(
+              'click',
+              ((web.Event clickEvent) {
+                _showEventPopup(pipWin, eventText, imageUrl);
+              }.toJS),
+            );
+          }
+
+          // Create icon
+          final icon = pipWin.document.createElement('div');
+          icon.className = 'event-icon $eventType';
+
+          // Create text container
+          final textContainer = pipWin.document.createElement('div');
+          textContainer.className = 'event-text';
+
+          // Add text
+          final textSpan = pipWin.document.createElement('span');
+          textSpan.textContent = eventText;
+          textContainer.appendChild(textSpan);
+
+          // Add merged count badge if > 1
+          if (mergedCount > 1) {
+            final countBadge = pipWin.document.createElement('span');
+            countBadge.className = 'event-count';
+            countBadge.textContent = mergedCount.toString();
+            textContainer.appendChild(countBadge);
+          }
+
+          // Assemble event item
+          eventItem.appendChild(icon);
+          eventItem.appendChild(textContainer);
+
+          // Add to list
+          eventList.appendChild(eventItem);
+        }
+
+        // Scroll to bottom
+        eventList.scrollTop = eventList.scrollHeight;
+
+        log('All events replaced: ${jsEvents.length} events');
+      } else if (action == 'updateEvents') {
         final eventList = pipWin.document.getElementById('event-list');
         final eventText = jsData.getProperty<JSString?>('event'.toJS)?.toDart;
         final eventType =
