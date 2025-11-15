@@ -67,11 +67,33 @@ const String _pipWindowStyles = '''
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    padding: 4px 0;
+    padding: 8px;
     font-size: 13px;
     color: hsl(0 0% 20%);
     line-height: 1.5;
     position: relative;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+
+  .event-item.clickable {
+    cursor: pointer;
+    background: hsl(210 40% 98%);
+    border: 1px solid hsl(210 40% 90%);
+  }
+
+  .event-item.clickable:hover {
+    background: hsl(210 40% 96%);
+    border-color: hsl(210 40% 80%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+
+  .event-item.clickable .event-text::after {
+    content: '🔍';
+    margin-left: 6px;
+    font-size: 12px;
+    opacity: 0.6;
   }
 
   .event-icon {
@@ -176,6 +198,19 @@ const String _pipWindowStyles = '''
     width: 16px;
     height: 16px;
   }
+
+  .event-count {
+    display: inline-block;
+    background: hsl(220 70% 50%);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 6px;
+    min-width: 18px;
+    text-align: center;
+  }
 ''';
 
 // PIP 윈도우 HTML 콘텐츠
@@ -240,7 +275,8 @@ class PipProvider extends Notifier<PipState> {
         'action': 'updateEvents',
         'event': type.content,
         'time': DateFormat('HH:mm:ss').format(DateTime.now()),
-        'type': type.type,
+        'type': type.type.name,
+        'imageUrl': type.imageUrl,
       }.jsify();
 
       pip.postMessage(message, '*');

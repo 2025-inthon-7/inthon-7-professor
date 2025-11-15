@@ -10,12 +10,14 @@ _$EventTypeImpl _$$EventTypeImplFromJson(Map<String, dynamic> json) =>
     _$EventTypeImpl(
       type: $enumDecode(_$ETypeEnumMap, json['type']),
       content: json['content'] as String,
+      imageUrl: json['imageUrl'] as String?,
     );
 
 Map<String, dynamic> _$$EventTypeImplToJson(_$EventTypeImpl instance) =>
     <String, dynamic>{
       'type': _$ETypeEnumMap[instance.type]!,
       'content': instance.content,
+      'imageUrl': instance.imageUrl,
     };
 
 const _$ETypeEnumMap = {
