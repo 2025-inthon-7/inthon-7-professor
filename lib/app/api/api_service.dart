@@ -4,6 +4,7 @@ import 'package:inthon_7_professor/app/api/result.dart';
 import 'package:inthon_7_professor/app/auth/auth_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
+import 'package:inthon_7_professor/app/model/course_session.dart';
 
 class ApiService {
   static ApiService get I => GetIt.I<ApiService>();
@@ -21,4 +22,10 @@ class ApiService {
     '/courses',
     fromJson: (data) => [for (final item in data) Course.fromJson(item)],
   );
+
+  Future<Result<CourseSession>> getTodayCourseSession(String courseId) =>
+      _dio.get(
+        '/api/courses/$courseId/today-session/',
+        fromJson: (data) => CourseSession.fromJson(data),
+      );
 }
