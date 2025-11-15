@@ -176,6 +176,91 @@ const String _pipWindowStyles = '''
     width: 16px;
     height: 16px;
   }
+
+  .event-item:hover {
+    background: hsl(0 0% 96.1%);
+    border-radius: 4px;
+  }
+
+  /* Popup Styles */
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .popup-content {
+    background: hsl(0 0% 100%);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid hsl(0 0% 89.8%);
+  }
+
+  .popup-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: hsl(0 0% 3.9%);
+  }
+
+  .popup-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: hsl(0 0% 45.1%);
+    transition: color 0.2s;
+  }
+
+  .popup-close:hover {
+    color: hsl(0 0% 3.9%);
+  }
+
+  .popup-body {
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .popup-image {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+
+  .popup-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: hsl(0 0% 20%);
+    margin: 0;
+    word-break: break-word;
+  }
 ''';
 
 // PIP 윈도우 HTML 콘텐츠
@@ -241,6 +326,7 @@ class PipProvider extends Notifier<PipState> {
         'event': type.content,
         'time': DateFormat('HH:mm:ss').format(DateTime.now()),
         'type': type.type,
+        'imageUrl': type.imageUrl,
       }.jsify();
 
       pip.postMessage(message, '*');

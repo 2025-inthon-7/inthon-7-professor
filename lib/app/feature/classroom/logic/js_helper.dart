@@ -5,6 +5,55 @@ import 'dart:js_interop_unsafe';
 import 'package:inthon_7_professor/app/extension/js_interlop_x.dart';
 import 'package:web/web.dart' as web;
 
+void _showEventPopup(PIPWindow pipWin, String content, String imageUrl) {
+  // 기존 팝업이 있으면 제거
+  final existingPopup = pipWin.document.getElementById('event-popup');
+  if (existingPopup != null) {
+    existingPopup.remove();
+  }
+
+  // 팝업 컨테이너 생성
+  final popup = pipWin.document.createElement('div');
+  popup.id = 'event-popup';
+  popup.className = 'popup-overlay';
+
+  // 팝업 내용 생성
+  popup.innerHTML = '''
+    <div class="popup-content">
+      <div class="popup-header">
+        <h3>Event Details</h3>
+        <button class="popup-close" id="popup-close-btn">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="popup-body">
+        <img src="$imageUrl" alt="Event Image" class="popup-image" />
+        <p class="popup-text">$content</p>
+      </div>
+    </div>
+  '''.toJS;
+
+  // body에 팝업 추가
+  pipWin.document.body!.appendChild(popup);
+
+  // 닫기 버튼 이벤트
+  final closeBtn = pipWin.document.getElementById('popup-close-btn');
+  if (closeBtn != null) {
+    closeBtn.onclick = ((web.MouseEvent event) {
+      popup.remove();
+    }.toJS);
+  }
+
+  // 오버레이 클릭 시 닫기
+  popup.onclick = ((web.MouseEvent event) {
+    if (event.target == popup) {
+      popup.remove();
+    }
+  }.toJS);
+}
+
 JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
   return ((web.Event event) {
     final messageEvent = event as web.MessageEvent;
@@ -21,6 +70,7 @@ JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
         final eventType =
             jsData.getProperty<JSString?>('type'.toJS)?.toDart ??
             'question'; // 기본값은 질문
+        final imageUrl = jsData.getProperty<JSString?>('imageUrl'.toJS)?.toDart;
 
         if (eventList != null && eventText != null) {
           // empty-state가 있으면 제거
@@ -36,6 +86,18 @@ JSExportedDartFunction getpipMessageHandler(PIPWindow pipWin) {
             'data-timestamp',
             DateTime.now().millisecondsSinceEpoch.toString(),
           );
+
+          // imageUrl이 있으면 저장하고 클릭 가능하게 표시
+          if (imageUrl != null && imageUrl.isNotEmpty) {
+            eventItem.setAttribute('data-image-url', imageUrl);
+            eventItem.setAttribute('data-content', eventText);
+            (eventItem as JSObject).setProperty('style.cursor'.toJS, 'pointer'.toJS);
+
+            // 클릭 이벤트 추가
+            eventItem.onclick = ((web.MouseEvent event) {
+              _showEventPopup(pipWin, eventText, imageUrl);
+            }.toJS);
+          }
 
           // 아이콘 생성
           final icon = pipWin.document.createElement('div');
