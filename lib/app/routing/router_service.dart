@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_page.dart';
 import 'package:inthon_7_professor/app/feature/error/error_page.dart';
+import 'package:inthon_7_professor/app/feature/history/history_page.dart';
 import 'package:inthon_7_professor/app/feature/home/home_page.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
@@ -27,6 +28,7 @@ abstract class Routes {
   static const String home = '/';
   static const String error = '/error';
   static const String classRoom = '/classroom';
+  static const String history = '/history';
 }
 
 class RouterService {
@@ -66,6 +68,12 @@ class RouterService {
           path: Routes.classRoom,
           builder: (context, state) {
             return const ClassroomPage();
+          },
+        ),
+        GoRoute(
+          path: Routes.history,
+          builder: (context, state) {
+            return const HistoryPage();
           },
         ),
       ], // TODO: Add routes

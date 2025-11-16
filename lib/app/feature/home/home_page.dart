@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:inthon_7_professor/app/extension/build_context_x.dart';
 import 'package:inthon_7_professor/app/feature/home/logic/home_provider.dart';
 import 'package:inthon_7_professor/app/feature/home/widgets/home_initial_panel.dart';
+import 'package:inthon_7_professor/app/feature/home/widgets/tutorial_dialog.dart';
+import 'package:inthon_7_professor/app/routing/router_service.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -32,7 +35,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 Transform.translate(
                   offset: Offset(0, 80),
                   child: SvgPicture.asset(
-                    'assets/logo_icononly.svg', // 텍스트 없는 아이콘만
+                    'assets/logo_icononly.svg',
                     width: 300,
                   ),
                 ),
@@ -46,6 +49,19 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             const SizedBox(height: 24),
             HomeInitialPanel(),
+            const SizedBox(height: 5),
+            ShadButton.ghost(
+              onPressed: () {
+                showShadDialog(
+                  context: context,
+                  builder: (context) {
+                    return TutorialDialog();
+                  },
+                );
+              },
+
+              child: const Text('나작교가 뭔가요?'),
+            ),
             SizedBox(height: 150),
           ],
         ),

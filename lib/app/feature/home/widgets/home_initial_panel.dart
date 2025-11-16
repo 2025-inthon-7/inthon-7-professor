@@ -44,19 +44,15 @@ class HomeInitialPanel extends ConsumerWidget {
                   },
                   child: const Text('수업 시작'),
                 ),
-                const SizedBox(height: 5),
-                ShadButton.ghost(
-                  width: double.maxFinite,
-                  onPressed: () {
-                    showShadDialog(
-                      context: context,
-                      builder: (context) {
-                        return TutorialDialog();
-                      },
-                    );
-                  },
 
-                  child: const Text('나작교가 뭔가요?'),
+                const SizedBox(height: 5),
+                ShadButton.outline(
+                  width: double.maxFinite,
+                  leading: const Icon(Icons.history),
+                  onPressed: () {
+                    context.go(Routes.history);
+                  },
+                  child: const Text('수업 기록'),
                 ),
               ],
             ),

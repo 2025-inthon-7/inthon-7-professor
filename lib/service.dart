@@ -30,4 +30,9 @@ class Service {
     GetIt.I.registerSingleton(RouterService()..init());
     return container;
   }
+
+  static Future<void> initAsyncServices() async {
+    final summaryCacheService = GetIt.I.registerSingleton(SummaryCacheService());
+    await summaryCacheService.init();
+  }
 }

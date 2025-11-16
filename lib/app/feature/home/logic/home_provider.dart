@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inthon_7_professor/app/api/api_service.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/cached_summary.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/event_provider.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/pip_provider.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/summary.dart';
@@ -10,6 +11,7 @@ import 'package:inthon_7_professor/app/feature/home/logic/home_state.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:inthon_7_professor/app/routing/router_service.dart';
 import 'package:inthon_7_professor/app/service/screen_capture_service.dart';
+import 'package:inthon_7_professor/app/service/summary_cache_service.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:web_socket/web_socket.dart';
 
@@ -129,7 +131,14 @@ class HomeProvider extends Notifier<HomeState> {
   Future<Summary?> getSummary(String sessionId) async {
     final res = await ApiService.I.getSummary(sessionId: sessionId);
     return res.fold(
-      onSuccess: (data) {
+      onSuccess: (data) async {
+        // Cache the summary
+        final cachedSummary = CachedSummary(
+          sessionId: sessionId,
+          summary: data,
+          cachedAt: DateTime.now(),
+        );
+        await SummaryCacheService.I.saveSummary(cachedSummary);
         return data;
       },
       onFailure: (error) {

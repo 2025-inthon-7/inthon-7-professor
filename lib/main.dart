@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:inthon_7_professor/app/auth/auth_service.dart';
 import 'package:inthon_7_professor/app/service/secure_storage_service.dart';
+import 'package:inthon_7_professor/app/service/summary_cache_service.dart';
 
 part 'service.dart';
 
@@ -22,6 +23,7 @@ void main() async {
       await Service.initFlutter();
       await Service.initEnv();
       final serviceProviderContainer = Service.registerServices();
+      await Service.initAsyncServices();
 
       final router = RouterService.I.router;
       runApp(
