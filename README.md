@@ -1,6 +1,20 @@
-# 나작교 (나만의 작은 교수)
+<div align="center">
+# 🎓 나만의 작은 교수님 [나작교]
 
-2025-inthon-7팀, 나만의 작은 교수, 나작교 교수용 프로그램입니다.
+**실시간 강의 인터렉션과 AI 기반 학습 지원을 제공하는 스마트 시간표 앱(유저)**
+
+[유저 앱](https://github.com/2025-inthon-7/inthon-7-student)
+
+[교수자 앱](https://github.com/2025-inthon-7/inthon-7-professor)
+
+[백엔드](https://github.com/2025-inthon-7/inthon-7-backend)
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.9.2+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.9.2+-0175C2?logo=dart&logoColor=white)](https://dart.dev)
+
+[주요 기능](#주요 기능) • [아키텍처](#아키텍처) • [프로젝트 구조](#프로젝트 구조) • [시작하기](#시작하기)
+
+</div>
 
 ## 주요 기능
 
@@ -190,19 +204,6 @@ ShadInput(
    - 파일당 150줄 이하 유지
    - 위젯을 별도 파일로 분리
    - 깊은 위젯 중첩 피하기
-
-## 문서
-
-- [CLAUDE.md](CLAUDE.md) - 전체 프로젝트 가이드라인
-- [shadcn_guide.md](shadcn_guide.md) - UI 컴포넌트 참조
-- [state_management.md](state_management.md) - 상태 관리 패턴
-- [api_handling.md](api_handling.md) - API 통합 가이드
-- [code_generation.md](code_generation.md) - 코드 생성 가이드
-- [coding_style.md](coding_style.md) - 코딩 표준
-- [recommendations.md](recommendations.md) - 권장사항
-
-
-작업 완료 후 코드 품질을 보장하기 위해 항상 `flutter analyze`를 실행하세요.
 
 ## 환경 변수
 
