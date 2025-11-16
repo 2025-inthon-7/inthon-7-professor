@@ -68,26 +68,32 @@ class ClassroomControlPanel extends ConsumerWidget {
                             ShadButton(
                               onPressed: () async {
                                 Navigator.of(context).pop();
+                                final sessionId = ref
+                                    .read(homeProvider)
+                                    .currentCourseSession!
+                                    .id;
+
+                                await ref
+                                    .read(homeProvider.notifier)
+                                    .endClass();
+
                                 ref
                                     .read(homeProvider.notifier)
-                                    .getSummary(
-                                      ref
-                                          .read(homeProvider)
-                                          .currentCourseSession!
-                                          .id,
-                                    )
+                                    .getSummary(sessionId)
                                     .then((summary) {
-                                      final c = RouterService.I.router.context;
-                                      if (c != null && summary != null) {
+                                      if (summary != null) {
                                         showDialog(
-                                          context: c,
+                                          context:
+                                              RouterService.I.router.context!,
                                           builder: (context) =>
                                               SummaryDialog(summary: summary),
-                                        );
+                                        ).then((_) {
+                                          RouterService.I.router.go(
+                                            Routes.home,
+                                          );
+                                        });
                                       }
                                     });
-                                ref.read(homeProvider.notifier).endClass();
-                                context.go(Routes.home);
                               },
                               child: const Text('확인'),
                             ),

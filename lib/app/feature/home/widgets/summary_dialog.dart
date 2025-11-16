@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_card.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/summary.dart';
+import 'package:inthon_7_professor/app/feature/home/widgets/importants_builder.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +16,6 @@ class SummaryDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = ShadTheme.of(context);
     final dateFormat = DateFormat('yyyy년 MM월 dd일');
-    final timeFormat = DateFormat('HH:mm');
 
     return ShadDialog(
       title: Text('수업 요약'),
@@ -109,90 +109,40 @@ class SummaryDialog extends StatelessWidget {
               ),
             ),
 
-            if (summary.important_moments.isNotEmpty) ...[
+            if (summary.manualImportants.isNotEmpty) ...[
               Text(
-                '중요한 포인트 ${summary.important_moments.length}개',
+                '중요한 포인트 ${summary.manualImportants.length}개',
                 style: theme.textTheme.h4,
               ),
-              ...summary.important_moments.map((moment) {
+              ...summary.manualImportants.map((moment) {
                 if (moment.capture_url == null && moment.note.isEmpty) {
                   return SizedBox.shrink();
                 }
-                return ClassroomCard(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          showShadDialog(
-                            context: context,
-                            builder: (context) {
-                              return ShadDialog(
-                                constraints: BoxConstraints(
-                                  maxWidth: 1000,
-                                  maxHeight: 800,
-                                ),
-                                child: GestureDetector(
-                                  onTap: () => Navigator.of(context).pop(),
-                                  child: CachedNetworkImage(
-                                    imageUrl: moment.capture_url!,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: SizedBox(
-                          width: 200,
-                          height: 120,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: CachedNetworkImage(
-                              imageUrl: moment.capture_url!,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          spacing: 8,
-                          children: [
-                            Row(
-                              children: [
-                                if (moment.is_hardest)
-                                  ShadBadge.destructive(
-                                    child: Text('가장 어려웠던 순간'),
-                                  ),
-                                Spacer(),
-                                Text(
-                                  timeFormat.format(moment.created_at),
-                                  style: theme.textTheme.small,
-                                ),
-                              ],
-                            ),
-                            if (moment.note.isNotEmpty)
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.muted,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  moment.note,
-                                  style: theme.textTheme.muted,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return ImportantsBuilder(moment: moment);
+              }),
+            ],
+            if (summary.qustionImportants.isNotEmpty) ...[
+              Text(
+                '수업 중 질문 ${summary.qustionImportants.length}개',
+                style: theme.textTheme.h4,
+              ),
+              ...summary.qustionImportants.map((moment) {
+                if (moment.capture_url == null && moment.note.isEmpty) {
+                  return SizedBox.shrink();
+                }
+                return ImportantsBuilder(moment: moment);
+              }),
+            ],
+            if (summary.hardImportants.isNotEmpty) ...[
+              Text(
+                '어려웠던 포인트 ${summary.hardImportants.length}개',
+                style: theme.textTheme.h4,
+              ),
+              ...summary.hardImportants.map((moment) {
+                if (moment.capture_url == null && moment.note.isEmpty) {
+                  return SizedBox.shrink();
+                }
+                return ImportantsBuilder(moment: moment);
               }),
             ],
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_card.dart';
 import 'package:inthon_7_professor/app/feature/classroom/logic/cached_summary.dart';
+import 'package:inthon_7_professor/app/feature/classroom/logic/summary.dart';
 import 'package:inthon_7_professor/app/feature/home/widgets/summary_dialog.dart';
 import 'package:inthon_7_professor/app/model/course.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -122,17 +123,30 @@ class HistorySummaryCard extends StatelessWidget {
                 ],
               ),
               if (summary.important_moments.isNotEmpty) ...[
-                const SizedBox(height: 12),
+                const SizedBox(height: 24),
                 Row(
                   children: [
-                    Icon(
-                      Icons.star,
-                      size: 16,
-                      color: theme.colorScheme.mutedForeground,
-                    ),
+                    Icon(Icons.star, size: 16, color: Colors.orange),
                     const SizedBox(width: 4),
                     Text(
-                      '중요 포인트 ${summary.important_moments.length}개',
+                      '중요 포인트 ${summary.manualImportants.length}개',
+                      style: theme.textTheme.small,
+                    ),
+                    const SizedBox(width: 8),
+                    VerticalDivider(),
+
+                    Icon(Icons.help, size: 16, color: Colors.blue),
+                    const SizedBox(width: 4),
+                    Text(
+                      '질문 포인트 ${summary.qustionImportants.length}개',
+                      style: theme.textTheme.small,
+                    ),
+                    const SizedBox(width: 8),
+                    VerticalDivider(),
+                    Icon(Icons.warning, size: 16, color: Colors.red),
+                    const SizedBox(width: 4),
+                    Text(
+                      '어려운 포인트 ${summary.hardImportants.length}개',
                       style: theme.textTheme.small,
                     ),
                   ],

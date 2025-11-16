@@ -117,12 +117,14 @@ class HomeProvider extends Notifier<HomeState> {
     ApiService.I.sendQuestionImage(questionId: id, imageBytes: image);
   }
 
-  void endClass() {
+  Future<void> endClass() async {
     final service = ScreenCaptureService.I;
     service.stopScreenCapture();
     ref.read(pipProvider.notifier).closePIPMode();
     if (state.currentCourseSession != null) {
-      ApiService.I.endCourseSession(sessionId: state.currentCourseSession!.id);
+      await ApiService.I.endCourseSession(
+        sessionId: state.currentCourseSession!.id,
+      );
     }
     state = state.copyWith(selectedCourse: null, classSearchValue: '');
     socket?.close();
