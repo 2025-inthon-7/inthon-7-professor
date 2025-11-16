@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inthon_7_professor/app/extension/build_context_x.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_captured_screen.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_control_panel.dart';
 import 'package:inthon_7_professor/app/feature/classroom/classroom_feed_panel.dart';
@@ -41,11 +42,21 @@ class _ClassroomPageState extends ConsumerState<ClassroomPage> {
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Row(
-            children: const [
+            children: [
               Expanded(
                 child: Column(
                   children: [
-                    ClassroomCapturedScreen(),
+                    Container(
+                      constraints: BoxConstraints(
+                        minHeight: 200,
+                        maxHeight: context.height - 300,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ClassroomCapturedScreen(),
+                    ),
                     SizedBox(height: 17),
                     Expanded(child: ClassroomInfoPanel()),
                   ],
