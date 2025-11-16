@@ -37,10 +37,11 @@ class ScreenCaptureService {
       await _waitForVideoLoad();
       _videoElement!.play();
 
-      log('화면 캡처 시작 성공');
+      print('화면 캡처 시작 성공');
       return true;
     } catch (e) {
-      log('화면 캡처 시작 실패: $e');
+      print('화면 캡처 시작 실패: $e');
+      rethrow;
       return false;
     }
   }
