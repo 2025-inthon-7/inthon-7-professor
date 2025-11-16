@@ -15,6 +15,7 @@ class EventType with _$EventType {
     required DateTime timestamp,
     @Default([]) List<int> imageData,
     @Default(1) int count,
+    int? question_id,
   }) = _EventType;
 
   factory EventType.fromJson(Map<String, dynamic> json) =>

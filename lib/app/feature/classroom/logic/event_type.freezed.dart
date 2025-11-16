@@ -26,6 +26,7 @@ mixin _$EventType {
   DateTime get timestamp => throw _privateConstructorUsedError;
   List<int> get imageData => throw _privateConstructorUsedError;
   int get count => throw _privateConstructorUsedError;
+  int? get question_id => throw _privateConstructorUsedError;
 
   /// Serializes this EventType to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,6 +49,7 @@ abstract class $EventTypeCopyWith<$Res> {
     DateTime timestamp,
     List<int> imageData,
     int count,
+    int? question_id,
   });
 }
 
@@ -71,6 +73,7 @@ class _$EventTypeCopyWithImpl<$Res, $Val extends EventType>
     Object? timestamp = null,
     Object? imageData = null,
     Object? count = null,
+    Object? question_id = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -94,6 +97,10 @@ class _$EventTypeCopyWithImpl<$Res, $Val extends EventType>
                 ? _value.count
                 : count // ignore: cast_nullable_to_non_nullable
                       as int,
+            question_id: freezed == question_id
+                ? _value.question_id
+                : question_id // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -115,6 +122,7 @@ abstract class _$$EventTypeImplCopyWith<$Res>
     DateTime timestamp,
     List<int> imageData,
     int count,
+    int? question_id,
   });
 }
 
@@ -137,6 +145,7 @@ class __$$EventTypeImplCopyWithImpl<$Res>
     Object? timestamp = null,
     Object? imageData = null,
     Object? count = null,
+    Object? question_id = freezed,
   }) {
     return _then(
       _$EventTypeImpl(
@@ -160,6 +169,10 @@ class __$$EventTypeImplCopyWithImpl<$Res>
             ? _value.count
             : count // ignore: cast_nullable_to_non_nullable
                   as int,
+        question_id: freezed == question_id
+            ? _value.question_id
+            : question_id // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -174,6 +187,7 @@ class _$EventTypeImpl implements _EventType {
     required this.timestamp,
     final List<int> imageData = const [],
     this.count = 1,
+    this.question_id,
   }) : _imageData = imageData;
 
   factory _$EventTypeImpl.fromJson(Map<String, dynamic> json) =>
@@ -197,10 +211,12 @@ class _$EventTypeImpl implements _EventType {
   @override
   @JsonKey()
   final int count;
+  @override
+  final int? question_id;
 
   @override
   String toString() {
-    return 'EventType(type: $type, content: $content, timestamp: $timestamp, imageData: $imageData, count: $count)';
+    return 'EventType(type: $type, content: $content, timestamp: $timestamp, imageData: $imageData, count: $count, question_id: $question_id)';
   }
 
   @override
@@ -216,7 +232,9 @@ class _$EventTypeImpl implements _EventType {
               other._imageData,
               _imageData,
             ) &&
-            (identical(other.count, count) || other.count == count));
+            (identical(other.count, count) || other.count == count) &&
+            (identical(other.question_id, question_id) ||
+                other.question_id == question_id));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -228,6 +246,7 @@ class _$EventTypeImpl implements _EventType {
     timestamp,
     const DeepCollectionEquality().hash(_imageData),
     count,
+    question_id,
   );
 
   /// Create a copy of EventType
@@ -251,6 +270,7 @@ abstract class _EventType implements EventType {
     required final DateTime timestamp,
     final List<int> imageData,
     final int count,
+    final int? question_id,
   }) = _$EventTypeImpl;
 
   factory _EventType.fromJson(Map<String, dynamic> json) =
@@ -266,6 +286,8 @@ abstract class _EventType implements EventType {
   List<int> get imageData;
   @override
   int get count;
+  @override
+  int? get question_id;
 
   /// Create a copy of EventType
   /// with the given fields replaced by the non-null parameter values.

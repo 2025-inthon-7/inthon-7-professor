@@ -17,6 +17,7 @@ _$EventTypeImpl _$$EventTypeImplFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       count: (json['count'] as num?)?.toInt() ?? 1,
+      question_id: (json['question_id'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$EventTypeImplToJson(_$EventTypeImpl instance) =>
@@ -26,6 +27,7 @@ Map<String, dynamic> _$$EventTypeImplToJson(_$EventTypeImpl instance) =>
       'timestamp': instance.timestamp.toIso8601String(),
       'imageData': instance.imageData,
       'count': instance.count,
+      'question_id': instance.question_id,
     };
 
 const _$ETypeEnumMap = {

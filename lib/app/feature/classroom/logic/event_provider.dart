@@ -86,6 +86,7 @@ class EventProvider extends Notifier<EventState> {
             data["created_at"],
           ).add(const Duration(hours: 9)),
           imageData: image,
+          question_id: data["question_id"],
         );
         _updateEvent(event);
 
@@ -98,8 +99,7 @@ class EventProvider extends Notifier<EventState> {
 
   void _updateQuestionLike(int questionId, int likeCount) {
     final updatedEvents = state.events.map((e) {
-      if (e.type == EType.question &&
-          e.content.contains('question_id:$questionId')) {
+      if (e.type == EType.question && e.question_id == questionId) {
         return e.copyWith(count: likeCount);
       }
       return e;
