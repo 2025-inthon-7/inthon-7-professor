@@ -27,9 +27,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 추천 방법
+            // SizedBox(height: 100),
             Column(
               children: [
                 Transform.translate(
@@ -62,7 +61,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
               child: const Text('나작교가 뭔가요?'),
             ),
-            SizedBox(height: 150),
           ],
         ),
       ),
