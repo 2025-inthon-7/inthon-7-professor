@@ -71,7 +71,9 @@ class HomeProvider extends Notifier<HomeState> {
       onSuccess: (data) async {
         state = state.copyWith(currentCourseSession: data);
         socket = await WebSocket.connect(
-          Uri.parse('ws://34.50.32.200/ws/session/${data.id}/teacher/'),
+          Uri.parse(
+            'wss://inthon-njg.darkerai.com/ws/session/${data.id}/teacher/',
+          ),
         );
         ref.read(eventProvider.notifier).listenSocket(socket);
         RouterService.I.showToast('수업이 성공적으로 시작되었습니다!');

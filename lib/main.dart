@@ -34,7 +34,7 @@ void main() async {
             routerConfig: router,
             themeMode: ThemeMode.light,
             theme: ShadThemeData(
-              colorScheme: const ShadBlueColorScheme.light(),
+              colorScheme: const ShadOrangeColorScheme.light(),
               brightness: Brightness.light,
             ),
             debugShowCheckedModeBanner: false,

@@ -33,7 +33,7 @@ class FeedEventTitle extends StatelessWidget {
                     Text(
                       event.content,
                       style: context.textTheme.p.copyWith(
-                        color: context.colorScheme.primary,
+                        color: Colors.blue,
                         fontSize: 14,
                       ),
                     ),
